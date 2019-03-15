@@ -29,7 +29,7 @@ app.on("close", () => {
 app.use(cors());
 app.use(sslRedirect());
 app.use(bodyParser.json());
-// app.use(express.static("build"));
+app.use(express.static("build"));
 // app.get('/', (req, res) => res.send('Hello World!'))
 app.use("/api/trips", tripRouter);
 app.use("/api/account", authRouter);
