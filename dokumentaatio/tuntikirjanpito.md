@@ -4,4 +4,5 @@ PVM | KLO | TUNTIA | TEHTY |
 15.03.2019|11:00-12:30|1,5|Alustettu backend, luotu mlab ja heroku, aloitettu backend kehitys controllereilla ja modeleilla (auth ja trip).|
 15.03.2019|21:00-22:00|1,0|Alustettu frontend, konffattu scriptoja kuntoon (frontend buildaamiseen/ajamiseen)|
 18.03.2019|11:00-14:30|3,5|Aloitettu frontendin teko, lisätty redux|
-**YHT**||6,5|
+18.03.2019|14:45-15:15|0,5|Lisätty LoginPage|
+**YHT**||7,0|
