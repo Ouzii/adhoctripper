@@ -30,9 +30,8 @@ app.use(cors());
 app.use(sslRedirect());
 app.use(bodyParser.json());
 app.use(express.static("build"));
-// app.get('/', (req, res) => res.send('Hello World!'))
 app.use("/api/trips", tripRouter);
-app.use("/api/account", authRouter);
+app.use("/api/auth", authRouter);
 
 const error = (request, response) => {
     response.status(404).send({ error: "Unknown endpoint" });

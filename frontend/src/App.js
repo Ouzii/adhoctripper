@@ -1,28 +1,44 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux'
+import { Header } from './components/Header';
+import SwipeableRoutes from 'react-swipeable-routes';
+import { Route } from 'react-router-dom';
 
 class App extends Component {
+
+  loginView = () => {
+    return <div>LOGIN HERE</div>
+  }
+  homeView() {
+    return <div>HOME</div>
+  }
+  historyView() {
+    return <div>HISTORY</div>
+  }
+  socialView() {
+    return <div>SOCIAL</div>
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Header />
+          <SwipeableRoutes style={{height: window.innerHeight}}>
+            <Route path="/history" component={this.historyView} />
+            <Route exact path="/" component={this.homeView} />
+            <Route path="/social" component={this.socialView} />
+            <Route path="/login" component={this.loginView} />
+          </SwipeableRoutes>
+
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps,
+  null)(App)
