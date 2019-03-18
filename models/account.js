@@ -9,7 +9,6 @@ const accountSchema = new mongoose.Schema({
 accountSchema.statics.format = account => {
   return {
     username: account.username,
-    passwordHash: account.passwordHash,
     email: account.email
   };
 };

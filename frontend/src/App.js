@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import './App.css';
 import { connect } from 'react-redux'
-import { Header } from './components/Header';
+import HeaderWithRouter from './components/Header';
 import SwipeableRoutes from 'react-swipeable-routes';
 import { Route } from 'react-router-dom';
-import { LoginPage } from './components/LoginPage';
+import LoginPage from './components/LoginPage';
+import RegisteringPage from './components/RegisteringPage';
+import { setLoggedUser } from './reducers/authReducer';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
 
-  loginView = () => {
-    return <div>LOGIN HERE</div>
+    this.state = {
+
+    }
   }
+
+  componentDidUpdate() {
+  }
+
+
   homeView() {
     return <div>HOME</div>
   }
@@ -20,26 +30,38 @@ class App extends Component {
   socialView() {
     return <div>SOCIAL</div>
   }
+  logout() {
+    this.props.setLoggedUser(null)
+  }
   render() {
     return (
       <div className="App">
-        <Header />
-          <SwipeableRoutes style={{height: window.innerHeight}}>
+        <HeaderWithRouter loggedUser={this.props.loggedUser} logout={() => this.logout()} />
+        {this.props.loggedUser ?
+          <SwipeableRoutes style={{ height: window.innerHeight }}>
+            <Route path="/history" component={this.historyView} />
+            <Route exact path="/" component={this.homeView} />
+            <Route path="/social" component={this.socialView} />
+          </SwipeableRoutes>
+          :
+          <SwipeableRoutes style={{ height: window.innerHeight }}>
             <Route path="/history" component={this.historyView} />
             <Route exact path="/" component={this.homeView} />
             <Route path="/social" component={this.socialView} />
             <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisteringPage} />
           </SwipeableRoutes>
+        }
+
 
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
+const mapStateToProps = (state) => ({
+  loggedUser: state.loggedUser
+})
 
 export default connect(mapStateToProps,
-  null)(App)
+  { setLoggedUser })(App)

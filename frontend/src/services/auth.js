@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-let baseUrl = ''
-if (process.env.REACT_APP_LOCAL !== 'true') {
-    baseUrl = process.env.REACT_APP_BASE_URL+'/api/auth'
-} else {
-    baseUrl = `http://localhost:3000/api/auth`
-}
+let baseUrl = 'http://localhost:3000/api/auth'
+// if (process.env.REACT_APP_LOCAL !== 'true') {
+//     baseUrl = process.env.REACT_APP_BASE_URL+'/api/auth'
+// } else {
+//     baseUrl = `http://localhost:3000/api/auth`
+// }
 let token
 
 const setToken = (props) => {
@@ -16,6 +16,16 @@ const config = () => {
     return {
         headers: { 'Authorization': token }
     }
+}
+
+const register = async (newUser) => {
+    const response = await axios.post(`${baseUrl}/register`, newUser)
+    return response.data
+}
+
+const login = async (user) => {
+    const response = await axios.post(`${baseUrl}/login`, user)
+    return response.data
 }
 
 const getAll = async () => {
@@ -38,4 +48,4 @@ const remove = async (id) => {
     return response
 }
 
-export default { getAll, remove, update, setToken, getOne }
+export default { getAll, remove, update, setToken, getOne, register, login }
