@@ -16,7 +16,7 @@ export class Header extends Component {
                 
                 <div className="navbar">
                 <img src={logo} className="App-logo left" alt="logo" />
-                {this.state.loggedUser ? <button className="right">Logout {this.state.loggedUser.username}</button> : <button className="right">Login</button>}
+                {this.state.loggedUser ? <button className="right">Logout {this.state.loggedUser.username}</button> : <NavLink to="/login" className="right">Login</NavLink>}
                 <ul className="navbar-buttons">
                     <li><NavLink to="/history">My routes</NavLink></li>
                     <li><NavLink exact to="/">New trip</NavLink></li>

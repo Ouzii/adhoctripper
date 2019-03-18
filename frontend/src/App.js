@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Header } from './components/Header';
 import SwipeableRoutes from 'react-swipeable-routes';
 import { Route } from 'react-router-dom';
+import { LoginPage } from './components/LoginPage';
 
 class App extends Component {
 
@@ -27,7 +28,7 @@ class App extends Component {
             <Route path="/history" component={this.historyView} />
             <Route exact path="/" component={this.homeView} />
             <Route path="/social" component={this.socialView} />
-            <Route path="/login" component={this.loginView} />
+            <Route path="/login" component={LoginPage} />
           </SwipeableRoutes>
 
       </div>
