@@ -1,5 +1,6 @@
 .App {
     text-align: center;
+    height: 100%;
 }
 
 .App-logo {
@@ -82,6 +83,7 @@ ul.navbar-buttons li a {
     width: 100%;
     color: #fff;
     background-color: black;
+    background-image: linear-gradient(grey, black);
     font-weight: bold;
     text-decoration: none;
     padding: 0px;
@@ -152,6 +154,7 @@ ul.navbar-buttons li a {
 
 .navbar .active {
     background-color: white;
+    background-image: linear-gradient(grey, white);
     color: black;
 }
 
@@ -287,4 +290,10 @@ input {
 
 .alert-danger .alert-link {
     color: #843534
+}
+
+.leaflet-container {
+    height: 60vmin;
+    width: 60vmin;
+    margin: auto;
 }

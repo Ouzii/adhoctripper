@@ -7,6 +7,7 @@ import { Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import RegisteringPage from './components/RegisteringPage';
 import { setLoggedUser } from './reducers/authReducer';
+import NewTripPage from './components/NewTripPage';
 
 class App extends Component {
   constructor(props) {
@@ -21,9 +22,6 @@ class App extends Component {
   }
 
 
-  homeView() {
-    return <div>HOME</div>
-  }
   historyView() {
     return <div>HISTORY</div>
   }
@@ -40,13 +38,13 @@ class App extends Component {
         {this.props.loggedUser ?
           <SwipeableRoutes style={{ height: window.innerHeight }}>
             <Route path="/history" component={this.historyView} />
-            <Route exact path="/" component={this.homeView} />
+            <Route exact path="/" component={NewTripPage} />
             <Route path="/social" component={this.socialView} />
           </SwipeableRoutes>
           :
           <SwipeableRoutes style={{ height: window.innerHeight }}>
             <Route path="/history" component={this.historyView} />
-            <Route exact path="/" component={this.homeView} />
+            <Route exact path="/" component={NewTripPage} />
             <Route path="/social" component={this.socialView} />
             <Route path="/login" component={LoginPage} />
             <Route path="/register" component={RegisteringPage} />
