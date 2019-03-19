@@ -6,8 +6,6 @@ class Mark extends React.Component {
         super(props)
         this.state = {
           markers: props.markers
-            // lat: parseFloat(this.props.pos.lat),
-            // lng: parseFloat(this.props.pos.lng)
         }
     }
 
@@ -19,7 +17,6 @@ class Mark extends React.Component {
           <Marker position={marker} key={`${marker.lat}, ${marker.lng}`}/>
         ))}
       </div>
-      // <Marker position={this.state} />
     )
   }
 }

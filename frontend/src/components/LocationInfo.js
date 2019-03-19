@@ -6,39 +6,27 @@ class LocationInfo extends Component {
         super(props)
 
         this.state = {
-
+            address:''
         }
         this.geocoder = new window.google.maps.Geocoder()
-        this.setLocations = props.setLocations()
-        this.startAddress = React.createRef()
-        this.endAddress = React.createRef()
+        this.addMarker = props.addMarker
     }
 
-    // handleChange(event) {
-    //     console.log(this.state)
-    //     this.setState({
-    //         [event.target.name]: event.target.value
-    //     })
-    // }
+    handleChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
 
     getGeocode(event) {
         event.preventDefault()
-        if (this.startAddress.current.value !== '') {
-            this.geocoder.geocode({ 'address': this.startAddress.current.value }, (results, status) => {
+        if (this.state.address !== '') {
+            this.geocoder.geocode({ 'address': this.state.address }, (results, status) => {
                 if (status === 'OK') {
-                    results.type = 'origin'
-                    this.setLocations(results)
-                    this.startAddress.current.value = ''
-                }
-            })
-        }
-
-        if (this.endAddress.current.value !== '') {
-            this.geocoder.geocode({ 'address': this.endAddress.current.value }, (results, status) => {
-                if (status === 'OK') {
-                    results.type = 'destination'
-                    this.setLocations(results)
-                    this.endAddress.current.value = ''
+                    this.addMarker({lat:results[0].geometry.location.lat(), lng:results[0].geometry.location.lng()})
+                    this.setState({
+                        address: ''
+                    })
                 }
             })
         }
@@ -47,17 +35,11 @@ class LocationInfo extends Component {
     render() {
         return (
             <div>
-                {/* <h2>Start: {this.state.origin ? `${this.state.origin.lat}, ${this.state.origin.lng}` : ''}</h2>
-                <h2>End: {this.state.destination ? `${this.state.destination.lat}, ${this.state.destination.lng}` : ''}</h2> */}
-                <br/>
-                <br/>
                 <form onSubmit={this.getGeocode.bind(this)} style={{ float: 'middle', margin: 'auto'}}>
-                    <label style={{ fontSize: '18', fontWeight: 'bold' }}>Start: </label><input type='text' name='startAddress' ref={this.startAddress} placeholder={'Give starting address'} /><br/>
-                    <label style={{ fontSize: '18', fontWeight: 'bold' }}>End: </label><input type='text' name='endAddress' ref={this.endAddress} placeholder={'Give ending address'} /><br/>
-                    <input type='submit' />
+                    <label style={{ fontSize: '18', fontWeight: 'bold' }}>Address </label><br/>
+                    <input type='text' name='address' value={this.state.address} onChange={this.handleChange.bind(this)} placeholder={'Add a waypoint with address'} /><br/>
+                    <input type='submit' value='Add waypoint'/>
                 </form>
-                <br/>
-                <br/>
             </div>
         )
     }

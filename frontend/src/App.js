@@ -18,9 +18,17 @@ class App extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
+    window.addEventListener('resize', () => this.setState(this.state))
   }
 
+  scrollToTop = index => {
+    Array.from(this.el.containerNode.children).forEach((child, i) => {
+      if (index !== i) {
+        child.scrollTo(0, 0);
+      }
+    });
+  };
 
   historyView() {
     return <div>HISTORY</div>
@@ -35,14 +43,15 @@ class App extends Component {
     return (
       <div className="App">
         <HeaderWithRouter loggedUser={this.props.loggedUser} logout={() => this.logout()} />
+        <div className="Container">
         {this.props.loggedUser ?
-          <SwipeableRoutes style={{ height: window.innerHeight }}>
+          <SwipeableRoutes innerRef={el => ( this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7}}>
             <Route path="/history" component={this.historyView} />
             <Route exact path="/" component={NewTripPage} />
             <Route path="/social" component={this.socialView} />
           </SwipeableRoutes>
           :
-          <SwipeableRoutes style={{ height: window.innerHeight }}>
+          <SwipeableRoutes innerRef={el => ( this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7}}>
             <Route path="/history" component={this.historyView} />
             <Route exact path="/" component={NewTripPage} />
             <Route path="/social" component={this.socialView} />
@@ -50,6 +59,7 @@ class App extends Component {
             <Route path="/register" component={RegisteringPage} />
           </SwipeableRoutes>
         }
+        </div>
 
 
       </div>

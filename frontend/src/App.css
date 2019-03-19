@@ -1,6 +1,14 @@
+html {
+    scroll-behavior: auto;
+    overflow: visible;
+}
+
+#mastercontainer {
+    overflow: visible;
+}
 .App {
     text-align: center;
-    height: 100%;
+    /* height: 150%; */
 }
 
 .App-logo {
@@ -15,11 +23,25 @@
     background-color: gray;
     min-height: 1vh;
     display: flex;
+    position: fixed;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    z-index: 900;
+}
+
+.Container {
+    padding-top: 30vmin;
+    z-index: 100;
+    overflow: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 body {
@@ -30,6 +52,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background-color: rgb(19, 19, 19);
     color: whitesmoke;
+    height: 100%;
+    overflow: auto;
 }
 
 code {
@@ -292,8 +316,12 @@ input {
     color: #843534
 }
 
-.leaflet-container {
-    height: 60vmin;
-    width: 60vmin;
+#directions-panel {
+    margin-top: 10px;
+    background-color: #9a9a9a;
+    padding: 10px;
+    overflow: scroll;
+    height: 174px;
     margin: auto;
-}
+    max-width: 400px;
+  }

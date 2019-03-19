@@ -15,7 +15,7 @@ class NewTripPage extends Component {
             destination: null,
             pos: null
         }
-        this.markers = []
+        // this.markers = []
     }
 
     componentWillMount() {
@@ -66,13 +66,9 @@ class NewTripPage extends Component {
     //     }
     // }
 
-    getMarkers(markers) {
-        this.markers = markers
-    }
-
-    generateRoute() {
-
-    }
+    // getMarkers(markers) {
+    //     this.markers = markers
+    // }
 
     setLocations(results) {
         switch (results.type) {
@@ -101,7 +97,7 @@ class NewTripPage extends Component {
                 {/* <LocationInfo setLocations={() => this.setLocations.bind(this)} /> */}
                 {this.state.pos ?
                     <div>
-                        <Map pos={this.state.pos} getMarkers={this.getMarkers.bind(this)} />
+                        <Map pos={this.state.pos} />
                     </div>
                     : <div></div>
                 }
