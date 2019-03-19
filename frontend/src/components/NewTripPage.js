@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import Map from './Map'
-import MyMapComponent from './MyMapComponent'
+import MapWithRoute from './MapWithRoute'
+import LocationInfo from './LocationInfo';
+import MapTry from '../Map/MapTry';
+
 class NewTripPage extends Component {
     constructor(props) {
         super(props)
@@ -10,10 +13,9 @@ class NewTripPage extends Component {
         this.state = {
             origin: null,
             destination: null,
-            pos: null,
-            markers: []
+            pos: null
         }
-
+        this.markers = []
     }
 
     componentWillMount() {
@@ -41,37 +43,72 @@ class NewTripPage extends Component {
         })
     }
 
-    handleClick(event) {
-        // origin: pos, destination: { lat: 60.235083, lng: 25.035553 },
+    // handleClick(event) {
+    //     if (!this.state.origin) {
+    //         const markers = this.state.markers
+    //         markers.push({ lat: event.latLng.lat(), lng: event.latLng.lng() })
+    //         this.setState({
+    //             origin: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+    //             markers: markers
+    //         })
+    //     } else if (!this.state.destination) {
+    //         this.setState({
+    //             destination: { lat: event.latLng.lat(), lng: event.latLng.lng() }
+    //         })
+    //     } else {
+    //         if(this.state.clickTurn) {
+    //             this.setState({ origin: null, markers: [], clickTurn: !this.state.clickTurn})
+    //             this.handleClick(event)
+    //         } else {
+    //             this.setState({ destination: null, clickTurn: !this.state.clickTurn})
+    //             this.handleClick(event)
+    //         }
+    //     }
+    // }
 
-        if (!this.state.origin) {
-            this.setState({
-                origin: { lat: event.latLng.lat(), lng: event.latLng.lng() },
-                markers: this.state.markers.push({ lat: event.latLng.lat(), lng: event.latLng.lng() })
-            })
-        } else if (!this.state.destination) {
-            this.setState({
-                destination: { lat: event.latLng.lat(), lng: event.latLng.lng() }
-            })
-        }
+    getMarkers(markers) {
+        this.markers = markers
     }
 
+    generateRoute() {
+        
+    }
+
+    setLocations(results) {
+        switch(results.type) {
+            case 'origin':
+            const markers = this.state.markers
+            markers.push({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() })
+            this.setState({
+                origin: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() },
+                markers: markers
+            })
+            break
+            case 'destination':
+            this.setState({
+                destination: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() }
+            })
+            break
+            default: 
+            break
+        }
+        
+    }
 
     render() {
         return (
             <div>
-                <h2>Start: {this.state.origin ? `${this.state.origin.lat}, ${this.state.origin.lng}`: ''}</h2>
-                <h2>End: {this.state.destination ? `${this.state.destination.lat}, ${this.state.destination.lng}`: ''}</h2>
+                <LocationInfo setLocations={() => this.setLocations.bind(this)}/>
                 {this.state.origin && this.state.destination ?
-                    <MyMapComponent origin={this.state.origin} destination={this.state.destination} />
+                    <MapWithRoute origin={this.state.origin} destination={this.state.destination} />
                     :
                     this.state.pos ?
                         <div>
-                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtWp9-oLmqQlWDhi8-BnocqBOzKlgt3xw"></script>
-                        <Map pos={this.state.pos} markers={this.state.markers} onClick={this.handleClick.bind(this)}/>
+                            <Map pos={this.state.pos} getMarkers={this.getMarkers.bind(this)}/>
                         </div>
                         : <div></div>
-                        }
+                }
+                <button onClick={() => console.log(this.markers)}>Generate route via waypoints</button>
             </div>
         )
     }
