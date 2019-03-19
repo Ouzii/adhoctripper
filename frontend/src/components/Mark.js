@@ -5,12 +5,10 @@ class Mark extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-          markers: props.pos
+          markers: props.markers
             // lat: parseFloat(this.props.pos.lat),
             // lng: parseFloat(this.props.pos.lng)
         }
-
-        console.log(this.state)
     }
 
     

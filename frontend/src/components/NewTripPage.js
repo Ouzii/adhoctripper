@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import Map from './Map'
-import MapWithRoute from './MapWithRoute'
-import LocationInfo from './LocationInfo';
-import MapTry from '../Map/MapTry';
+// import MapWithRoute from './MapWithRoute'
+// import LocationInfo from './LocationInfo';
+// import MapTry from '../Map/MapTry';
 
 class NewTripPage extends Component {
     constructor(props) {
@@ -71,44 +71,41 @@ class NewTripPage extends Component {
     }
 
     generateRoute() {
-        
+
     }
 
     setLocations(results) {
-        switch(results.type) {
+        switch (results.type) {
             case 'origin':
-            const markers = this.state.markers
-            markers.push({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() })
-            this.setState({
-                origin: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() },
-                markers: markers
-            })
-            break
+                const markers = this.state.markers
+                markers.push({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() })
+                this.setState({
+                    origin: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() },
+                    markers: markers
+                })
+                break
             case 'destination':
-            this.setState({
-                destination: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() }
-            })
-            break
-            default: 
-            break
+                this.setState({
+                    destination: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() }
+                })
+                break
+            default:
+                break
         }
-        
+
     }
 
     render() {
         return (
             <div>
-                <LocationInfo setLocations={() => this.setLocations.bind(this)}/>
-                {this.state.origin && this.state.destination ?
-                    <MapWithRoute origin={this.state.origin} destination={this.state.destination} />
-                    :
-                    this.state.pos ?
-                        <div>
-                            <Map pos={this.state.pos} getMarkers={this.getMarkers.bind(this)}/>
-                        </div>
-                        : <div></div>
+                {/* <LocationInfo setLocations={() => this.setLocations.bind(this)} /> */}
+                {this.state.pos ?
+                    <div>
+                        <Map pos={this.state.pos} getMarkers={this.getMarkers.bind(this)} />
+                    </div>
+                    : <div></div>
                 }
-                <button onClick={() => console.log(this.markers)}>Generate route via waypoints</button>
+
             </div>
         )
     }
