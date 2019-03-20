@@ -42,24 +42,20 @@ class NewTripPage extends Component {
     }
 
     saveTrip = async () => {
-        const newTrip = {
-            start: JSON.stringify(this.mapItem.current.markers[0]),
-            end: JSON.stringify(this.mapItem.current.markers[this.mapItem.current.markers.length - 1]),
-            directions: JSON.stringify(this.mapItem.current.directions),
-            user: this.props.loggedUser ? this.props.loggedUser.id : null
-        }
+            const newTrip = {
+                start: JSON.stringify(this.mapItem.current.markers[0]),
+                end: JSON.stringify(this.mapItem.current.markers[this.mapItem.current.markers.length - 1]),
+                directions: JSON.stringify(this.mapItem.current.directions),
+                user: this.props.loggedUser ? this.props.loggedUser.id : null
+            }
 
-        try {
-            const response = await tripService.saveOne(newTrip)
-
-            if (response) {
+            try {
+                await tripService.saveOne(newTrip)
                 this.mapItem.current.resetAll()
                 this.props.notify("Trip saved", 3000)
-                
+            } catch (error) {
+                this.props.notify(error.response.data.error, 3000)
             }
-        } catch (error) {
-            this.props.notify(error.response.data.error, 3000)
-        }
     }
 
     render() {
@@ -67,11 +63,11 @@ class NewTripPage extends Component {
             <div>
                 {this.state.pos ?
                     <div>
-                        <Map pos={this.state.pos} saveTrip={this.saveTrip.bind(this)} ref={this.mapItem} />
+                        <Map pos={this.state.pos} saveTrip={this.saveTrip.bind(this)} loggedUser={this.props.loggedUser} ref={this.mapItem} />
                     </div>
                     : <div></div>
                 }
-
+                {this.props.loggedUser ? <button onClick={() => this.saveTrip()}>Save Trip</button> : null}
             </div>
         )
     }

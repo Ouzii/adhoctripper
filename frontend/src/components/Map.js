@@ -53,7 +53,7 @@ class Map extends React.Component {
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directions = { ...result }
-                this.directionsItem.current.setState({ directions: this.directions })
+                this.directionsItem.current.setState({ directions: this.directions, panel: this.panelItem })
             } else {
                 console.error(`error fetching directions ${result}`);
             }
@@ -68,7 +68,10 @@ class Map extends React.Component {
         this.markers = []
         this.directions = { routes: [] }
         this.markItem.current.setState({markers: []})
-        this.directionsItem.current.setState({directions: {routes:[]}})
+        this.directionsItem.current.setState({directions: this.directions, panel: this.panelItem})
+        while(this.panelItem.current.firstChild) {
+            this.panelItem.current.removeChild(this.panelItem.current.firstChild)
+        }
     }
 
     addMarkerByAddress(marker) {
@@ -76,6 +79,10 @@ class Map extends React.Component {
         markers.push(marker)
         this.markItem.current.setState(markers)
         this.getMarkers(markers)
+    }
+
+    updatePanel() {
+
     }
 
     render() {
@@ -112,7 +119,7 @@ class Map extends React.Component {
                         this.markItem.current.setState(markers)
                         this.getMarkers(markers)
                     }
-                }}>Add current location</button>
+                }}>Add current location</button><br/><br/>
                 <MapWithMarker
                     containerElement={<div style={{ width: window.innerWidth * 0.8, height: window.innerWidth * 0.8, maxHeight: '400px', maxWidth: '400px', margin: 'auto' }} />}
                     mapElement={<div style={{ height: `100%`, position: 'relative', zIndex: '1000' }} />}
@@ -121,11 +128,9 @@ class Map extends React.Component {
                     routeMapper={<RouteMapping directions={this.directions} ref={this.directionsItem} panel={this.panelItem}/>}
                     giveMarkers={this.getMarkers.bind(this)}
                 /><br/>
-                <button onClick={() => this.getRoute()}>Generate route via waypoints</button><br/>
-                <div id="directions-panel" style={{width: window.innerWidth * 0.8}} ref={this.panelItem}></div><br/>
-                <button onClick={() => this.resetAll()}>RESET ALL</button><br/>
-                <button onClick={() => this.saveTrip()}>Save Trip</button>
-
+                <button onClick={() => this.getRoute()}>Generate route via waypoints</button><br/><br/>
+                <div id="directions-panel" style={{width: window.innerWidth * 0.8}} ref={this.panelItem}/><br/>
+                <button onClick={() => this.resetAll()}>RESET ALL</button><br/><br/>
             </div>
         )
     }

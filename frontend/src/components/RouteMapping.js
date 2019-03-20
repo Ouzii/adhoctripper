@@ -7,7 +7,7 @@ export default class RouteMapping extends Component {
     
       this.state = {
          directions: {},
-         panel: props.panel.current
+         panel: props.panel
       }
     }
     
@@ -15,7 +15,7 @@ export default class RouteMapping extends Component {
 
   render() {
     return (
-        <DirectionsRenderer directions={this.state.directions} panel={this.state.panel} onDirectionsChanged={() => console.log('jasd')}/>
+        <DirectionsRenderer directions={this.state.directions} panel={this.state.panel.current}/>
     )
   }
 }
