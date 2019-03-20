@@ -18,21 +18,27 @@ authRouter.post("/login", async (request, response) => {
     if (body === undefined || (body.constructor === Object && Object.keys(body).length === 0)) {
       return response.status(400).json({ error: "Content missing" });
     }
+    if (body.username.length === 0 || body.password.length === 0) {
+      return response.status(403).send({ error: "Invalid username or password" })
+    }
     const account = await Account.findOne({ username: body.username })
+    if (!account) {
+      return response.status(403).send({ error: "Invalid username or password" })
+    }
     bcrypt.compare(body.password, account.passwordHash, (err, res) => {
       if (err) {
         console.log(err)
-        return response.status(400).send({ error:  "Something went wrong, try again later"})
+        response.status(400).send({ error: "Something went wrong, try again later" })
       }
       if (res) {
         return response.status(200).send(Account.format(account))
       } else {
-        return response.status(403).send({ error: "Invalid username or password"})
+        return response.status(403).send({ error: "Invalid username or password" })
       }
     })
   } catch (error) {
     console.log(error);
-    response.status(400).send({ error: "Something went wrong, try again later"});
+    response.status(400).send({ error: "Something went wrong, try again later" });
   }
 })
 
@@ -42,10 +48,13 @@ authRouter.post("/register", async (request, response) => {
     if (body === undefined || (body.constructor === Object && (Object.keys(body).length === 0 || Object.values(body).length < 3))) {
       return response.status(400).json({ error: "Content missing" });
     }
+    if (body.username.length < 5 || "@".indexOf(body.username) === -1 || body.password.length < 8) {
+      return response.status(400).json({ error: "Invalid credentials" })
+    }
     bcrypt.hash(body.password, 10, async (err, hash) => {
       if (err) {
         console.log(err)
-        return response.status(400).send({ error:  "Something went wrong, try again later"})
+        return response.status(400).send({ error: "Something went wrong, try again later" })
       }
       const account = new Account({
         username: body.username,

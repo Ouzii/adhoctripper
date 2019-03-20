@@ -43,8 +43,7 @@ class RegisteringPage extends Component {
                 this.props.notify(`Registered and logged in as ${response.username}`, 3000)
             }
         } catch (error) {
-            console.log(error)
-            this.setState({ loading: false, error: 'Something went wrong' })
+            this.setState({ loading: false, error: error.response.data.error })
             setTimeout(() =>
                 this.setState({error: null})
             ,3000)
@@ -67,9 +66,9 @@ class RegisteringPage extends Component {
                 </div>
                 <div className="flex-container">
                     <form onSubmit={this.handleSubmit}>
-                        <input className="flex-item" type="text" name="username" minLength="5" onChange={this.handleChange} value={this.state.username} placeholder="Username"></input><br></br>
-                        <input className="flex-item" type="email" name="email" onChange={this.handleChange} value={this.state.email} placeholder="Email"></input><br></br>
-                        <input className="flex-item" type="password" name="password" minLength="8" maxLength="30" onChange={this.handleChange} value={this.state.password} placeholder="Password"></input><br></br>
+                        <input className="flex-item" required type="text" name="username" minLength="5" onChange={this.handleChange} value={this.state.username} placeholder="Username"></input><br></br>
+                        <input className="flex-item" required type="email" name="email" onChange={this.handleChange} value={this.state.email} placeholder="Email"></input><br></br>
+                        <input className="flex-item" required type="password" name="password" minLength="8" maxLength="30" onChange={this.handleChange} value={this.state.password} placeholder="Password"></input><br></br>
                         {this.state.loading ?
                             <div className="flex-item">
                                 <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />

@@ -14,7 +14,7 @@ class Header extends Component {
                 <div className="navbar">
                     <img src={logo} className="App-logo left" alt="logo" />
                     {this.props.loggedUser ?
-                     <button onClick={() => this.handleLogout()} className="right">Logout {this.props.loggedUser.username}</button>
+                     <NavLink to="/userpage" className="right">Userpage</NavLink>
                      :
                      <NavLink to="/login" className="right">Login/Register</NavLink>}
                     <ul className="navbar-buttons">

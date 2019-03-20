@@ -9,6 +9,7 @@ import RegisteringPage from './components/RegisteringPage';
 import { setLoggedUser } from './reducers/authReducer';
 import NewTripPage from './components/NewTripPage';
 import Notification from './components/Notification';
+import UserPage from './components/UserPage';
 
 class App extends Component {
   constructor(props) {
@@ -37,9 +38,7 @@ class App extends Component {
   socialView() {
     return <div>SOCIAL</div>
   }
-  logout() {
-    this.props.setLoggedUser(null)
-  }
+
   render() {
     return (
       <div className="App">
@@ -50,6 +49,7 @@ class App extends Component {
               <Route path="/history" component={this.historyView} />
               <Route exact path="/" component={NewTripPage} />
               <Route path="/social" component={this.socialView} />
+              <Route path="/userpage" component={UserPage} />
             </SwipeableRoutes>
             :
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7 }}>

@@ -37,7 +37,7 @@ class LocationInfo extends Component {
             <div>
                 <form onSubmit={this.getGeocode.bind(this)} style={{ float: 'middle', margin: 'auto'}}>
                     <label style={{ fontSize: '18', fontWeight: 'bold' }}>Address </label><br/>
-                    <input type='text' name='address' value={this.state.address} onChange={this.handleChange.bind(this)} placeholder={'Add a waypoint with address'} /><br/>
+                    <input type='text' className={'inputBar'} name='address' value={this.state.address} onChange={this.handleChange.bind(this)} placeholder={'Address..'} /><br/><br/>
                     <input type='submit' value='Add waypoint'/>
                 </form>
             </div>

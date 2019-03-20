@@ -37,7 +37,7 @@ class LoginPage extends Component {
             }
         } catch (error) {
             console.log(error)
-            this.setState({ loading: false, error: 'Invalid username or password', password: '' })
+            this.setState({ loading: false, error: error.response.data.error, password: '' })
             setTimeout(() => {
                 this.setState({error: null})
             }, 3000)
@@ -60,11 +60,11 @@ class LoginPage extends Component {
                 </div>
                 <div className="flex-container">
                     <form onSubmit={this.handleSubmit}>
-                        <input className="flex-item" type="username" name="username" onChange={this.handleChange} value={this.state.username} placeholder="Username"></input><br></br>
-                        <input className="flex-item" type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder="Password"></input><br></br>
+                        <input className="flex-item" required type="username" name="username" onChange={this.handleChange} value={this.state.username} placeholder="Username"></input><br></br>
+                        <input className="flex-item" required type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder="Password"></input><br></br>
                         {this.state.loading ?
-                            <div className="flex-item">
-                                <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
+                            <div className="flex-item" style={{width: '100%'}}>
+                                <Spinner style={{ marginLeft: "43%"}} name='circle' fadeIn='none' color='white' />
                             </div>
 
                             :
