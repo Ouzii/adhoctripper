@@ -20,6 +20,10 @@ tripRouter.post("/", async (request, response) => {
         if (body === undefined || (body.constructor === Object && Object.keys(body).length === 0)) {
             return response.status(400).json({ error: "Content missing" });
         }
+
+        if (!body.user) {
+            return response.status(403).json({ error: "Must be logged in"});
+        }
         const trip = new Trip({
             start: body.start,
             end: body.end,

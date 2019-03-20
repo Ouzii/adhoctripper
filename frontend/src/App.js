@@ -8,6 +8,7 @@ import LoginPage from './components/LoginPage';
 import RegisteringPage from './components/RegisteringPage';
 import { setLoggedUser } from './reducers/authReducer';
 import NewTripPage from './components/NewTripPage';
+import Notification from './components/Notification';
 
 class App extends Component {
   constructor(props) {
@@ -44,23 +45,24 @@ class App extends Component {
       <div className="App">
         <HeaderWithRouter loggedUser={this.props.loggedUser} logout={() => this.logout()} />
         <div className="Container">
-        {this.props.loggedUser ?
-          <SwipeableRoutes innerRef={el => ( this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7}}>
-            <Route path="/history" component={this.historyView} />
-            <Route exact path="/" component={NewTripPage} />
-            <Route path="/social" component={this.socialView} />
-          </SwipeableRoutes>
-          :
-          <SwipeableRoutes innerRef={el => ( this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7}}>
-            <Route path="/history" component={this.historyView} />
-            <Route exact path="/" component={NewTripPage} />
-            <Route path="/social" component={this.socialView} />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisteringPage} />
-          </SwipeableRoutes>
-        }
+          {this.props.loggedUser ?
+            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7 }}>
+              <Route path="/history" component={this.historyView} />
+              <Route exact path="/" component={NewTripPage} />
+              <Route path="/social" component={this.socialView} />
+            </SwipeableRoutes>
+            :
+            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7 }}>
+              <Route path="/history" component={this.historyView} />
+              <Route exact path="/" component={NewTripPage} />
+              <Route path="/social" component={this.socialView} />
+              <Route path="/login" component={LoginPage} />
+              <Route path="/register" component={RegisteringPage} />
+            </SwipeableRoutes>
+          }
+          <Notification />
         </div>
-
+        
 
       </div>
     );

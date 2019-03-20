@@ -2,20 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import Map from './Map'
-// import MapWithRoute from './MapWithRoute'
-// import LocationInfo from './LocationInfo';
-// import MapTry from '../Map/MapTry';
+import tripService from '../services/trip'
+import { notify } from '../reducers/notificationReducer'
 
 class NewTripPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            origin: null,
-            destination: null,
             pos: null
         }
-        // this.markers = []
+
+        this.mapItem = React.createRef()
     }
 
     componentWillMount() {
@@ -43,61 +41,33 @@ class NewTripPage extends Component {
         })
     }
 
-    // handleClick(event) {
-    //     if (!this.state.origin) {
-    //         const markers = this.state.markers
-    //         markers.push({ lat: event.latLng.lat(), lng: event.latLng.lng() })
-    //         this.setState({
-    //             origin: { lat: event.latLng.lat(), lng: event.latLng.lng() },
-    //             markers: markers
-    //         })
-    //     } else if (!this.state.destination) {
-    //         this.setState({
-    //             destination: { lat: event.latLng.lat(), lng: event.latLng.lng() }
-    //         })
-    //     } else {
-    //         if(this.state.clickTurn) {
-    //             this.setState({ origin: null, markers: [], clickTurn: !this.state.clickTurn})
-    //             this.handleClick(event)
-    //         } else {
-    //             this.setState({ destination: null, clickTurn: !this.state.clickTurn})
-    //             this.handleClick(event)
-    //         }
-    //     }
-    // }
-
-    // getMarkers(markers) {
-    //     this.markers = markers
-    // }
-
-    setLocations(results) {
-        switch (results.type) {
-            case 'origin':
-                const markers = this.state.markers
-                markers.push({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() })
-                this.setState({
-                    origin: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() },
-                    markers: markers
-                })
-                break
-            case 'destination':
-                this.setState({
-                    destination: { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() }
-                })
-                break
-            default:
-                break
+    saveTrip = async () => {
+        const newTrip = {
+            start: JSON.stringify(this.mapItem.current.markers[0]),
+            end: JSON.stringify(this.mapItem.current.markers[this.mapItem.current.markers.length - 1]),
+            directions: JSON.stringify(this.mapItem.current.directions),
+            user: this.props.loggedUser ? this.props.loggedUser.id : null
         }
 
+        try {
+            const response = await tripService.saveOne(newTrip)
+
+            if (response) {
+                this.mapItem.current.resetAll()
+                this.props.notify("Trip saved", 3000)
+                
+            }
+        } catch (error) {
+            this.props.notify(error.response.data.error, 3000)
+        }
     }
 
     render() {
         return (
             <div>
-                {/* <LocationInfo setLocations={() => this.setLocations.bind(this)} /> */}
                 {this.state.pos ?
                     <div>
-                        <Map pos={this.state.pos} />
+                        <Map pos={this.state.pos} saveTrip={this.saveTrip.bind(this)} ref={this.mapItem} />
                     </div>
                     : <div></div>
                 }
@@ -108,8 +78,8 @@ class NewTripPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+    loggedUser: state.loggedUser
 })
 
 
-export default connect(mapStateToProps, null)(withRouter(NewTripPage))
+export default connect(mapStateToProps, { notify })(withRouter(NewTripPage))

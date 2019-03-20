@@ -7,5 +7,6 @@ PVM | KLO | TUNTIA | TEHTY |
 18.03.2019|14:45-15:15|0,5|Lisätty LoginPage|
 18.03.2019|18:30-22:30|4,0|Lisätty RegisteringPage ja backend toiminnallisuus kirjautumiselle ja rekisteröitymiselle|
 19.03.2019|11:00-20:00|9,0|Aloitettu kartan implementoimista ja refaktoroitu/kokeiltu sitä. Painittu pitkään.|
-19.03.2019|21:00-00:30|3,3|Jatkettu kartan implementointia. Korjattu overflow virheitä. Kartta toimii!|
+19.03.2019|21:00-00:30|3,5|Jatkettu kartan implementointia. Korjattu overflow virheitä. Kartta toimii!|
+20.03.2019|15:00-XXXX|X,X|XX|
 **YHT**||23,5|

@@ -21,6 +21,7 @@ class Map extends React.Component {
         this.directionService = new google.maps.DirectionsService()
         this.markers = []
         this.directions = {routes: []}
+        this.saveTrip = props.saveTrip
     }
 
     componentDidMount() {
@@ -48,7 +49,7 @@ class Map extends React.Component {
             origin: new google.maps.LatLng(origin.location.lat, origin.location.lng),
             destination: new google.maps.LatLng(destination.location.lat, destination.location.lng),
             waypoints: middlePoints,
-            travelMode: google.maps.TravelMode.DRIVING,
+            travelMode: google.maps.TravelMode.DRIVING
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directions = { ...result }
@@ -122,7 +123,9 @@ class Map extends React.Component {
                 /><br/>
                 <button onClick={() => this.getRoute()}>Generate route via waypoints</button><br/>
                 <div id="directions-panel" style={{width: window.innerWidth * 0.8}} ref={this.panelItem}></div><br/>
-                <button onClick={() => this.resetAll()}>RESET ALL</button>
+                <button onClick={() => this.resetAll()}>RESET ALL</button><br/>
+                <button onClick={() => this.saveTrip()}>Save Trip</button>
+
             </div>
         )
     }

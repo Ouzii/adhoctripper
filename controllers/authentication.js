@@ -19,7 +19,7 @@ authRouter.post("/login", async (request, response) => {
       return response.status(400).json({ error: "Content missing" });
     }
     const account = await Account.findOne({ username: body.username })
-    bcrypt.compare(body.password, account.passwordHash, function(err, res) {
+    bcrypt.compare(body.password, account.passwordHash, (err, res) => {
       if (err) {
         console.log(err)
         return response.status(400).send({ error:  "Something went wrong, try again later"})
@@ -39,11 +39,10 @@ authRouter.post("/login", async (request, response) => {
 authRouter.post("/register", async (request, response) => {
   try {
     const body = request.body;
-    if (body === undefined || (body.constructor === Object && (Object.keys(body).length === 0) || Object.values(body).length <= 3)) {
+    if (body === undefined || (body.constructor === Object && (Object.keys(body).length === 0 || Object.values(body).length < 3))) {
       return response.status(400).json({ error: "Content missing" });
     }
-    console.log(Object.values(body).length)
-    bcrypt.hash(body.password, 10, async function (err, hash) {
+    bcrypt.hash(body.password, 10, async (err, hash) => {
       if (err) {
         console.log(err)
         return response.status(400).send({ error:  "Something went wrong, try again later"})

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Spinner from 'react-spinkit'
 import { Redirect, NavLink, withRouter } from 'react-router-dom'
 import { setLoggedUser } from '../reducers/authReducer'
+import { notify } from '../reducers/notificationReducer'
 import authService from '../services/auth'
 
 class LoginPage extends Component {
@@ -27,10 +28,11 @@ class LoginPage extends Component {
         event.preventDefault()
         this.changeLoading()
         try {
-            const success = await authService.login({ username: event.target.username.value, password: event.target.password.value })
+            const response = await authService.login({ username: event.target.username.value, password: event.target.password.value })
 
-            if (success) {
-                await this.props.setLoggedUser(success)
+            if (response) {
+                await this.props.setLoggedUser(response)
+                this.props.notify(`Logged in as ${response.username}`, 3000)
                 this.props.history.push('/')
             }
         } catch (error) {
@@ -83,4 +85,4 @@ const mapStateToProps = (state) => ({
     loggedUser: state.loggedUser
 })
 
-export default connect(mapStateToProps, { setLoggedUser })(withRouter(LoginPage))
+export default connect(mapStateToProps, { setLoggedUser, notify })(withRouter(LoginPage))

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Redirect, withRouter } from 'react-router-dom'
 import Spinner from 'react-spinkit'
 import authService from '../services/auth'
-import { setLoggedUser } from '../reducers/authReducer';
+import { setLoggedUser } from '../reducers/authReducer'
+import { notify } from '../reducers/notificationReducer'
 
 class RegisteringPage extends Component {
     constructor(props) {
@@ -34,11 +35,12 @@ class RegisteringPage extends Component {
                 email: this.state.email,
                 password: this.state.password
             }
-            const success = await authService.register(newUser)
+            const response = await authService.register(newUser)
 
-            if (success) {
-                this.props.setLoggedUser(success)
+            if (response) {
+                this.props.setLoggedUser(response)
                 this.props.history.push('/')
+                this.props.notify(`Registered and logged in as ${response.username}`, 3000)
             }
         } catch (error) {
             console.log(error)
@@ -84,8 +86,9 @@ class RegisteringPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    loggedUser: state.loggedUser
+    loggedUser: state.loggedUser,
+    notification: state.notification
 })
 
 
-export default connect(mapStateToProps, { setLoggedUser })(withRouter(RegisteringPage))
+export default connect(mapStateToProps, { setLoggedUser, notify })(withRouter(RegisteringPage))
