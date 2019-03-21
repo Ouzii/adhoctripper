@@ -16,11 +16,22 @@ class UserPage extends Component {
 
     logout() {
         this.props.setLoggedUser(null)
+        window.localStorage.removeItem('id_token')
         this.props.history.push('/')
         this.props.notify("Logged out", 3000)
     }
 
-    handleSubmit() {
+    deleteAccount = async () => {
+        if (window.confirm('Are you sure you want to delete your account and all your data?')) {
+            await authService.remove()
+            this.props.setLoggedUser(null)
+            window.localStorage.removeItem('id_token')
+            this.props.history.push('/')
+            this.props.notify("Account deleted", 3000)
+        }
+    }
+
+    handleVehicleAdd() {
         // TO BE IMPLEMENTED
     }
 
@@ -28,12 +39,13 @@ class UserPage extends Component {
         return (
             <div>
                 <h2>Add a vehicle</h2>
-                <form onSubmit={this.handleSubmit()}>
-                    <input type="text" name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.."/><br/>
-                    <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" /><br/><br/>
-                    <input type="submit" value="Add vehicle"/>
-                </form><br/><br/>
-                <button onClick={() => this.logout()}>Logout</button>
+                <form onSubmit={this.handleVehicleAdd()}>
+                    <input type="text" name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.." /><br />
+                    <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" /><br /><br />
+                    <input type="submit" value="Add vehicle" />
+                </form><br /><br />
+                <button onClick={() => this.logout()}>Logout</button><br/><br/>
+                <button onClick={() => this.deleteAccount()}>Delete account</button>
             </div>
         )
     }

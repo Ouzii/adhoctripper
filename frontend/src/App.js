@@ -10,6 +10,7 @@ import { setLoggedUser } from './reducers/authReducer';
 import NewTripPage from './components/NewTripPage';
 import Notification from './components/Notification';
 import UserPage from './components/UserPage';
+import authService from './services/auth'
 
 class App extends Component {
   constructor(props) {
@@ -22,6 +23,19 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', () => this.setState(this.state))
+    const token = window.localStorage.getItem('id_token')
+    const user = window.localStorage.getItem('loggedUser')
+    if(token && !authService.isTokenExpired(token) && user) {
+      this.props.setLoggedUser(user)
+      authService.setToken(token)
+    } else {
+      window.localStorage.removeItem('id_token')
+      window.localStorage.removeItem('loggedUser')
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize')
   }
 
   scrollToTop = index => {
@@ -42,17 +56,17 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <HeaderWithRouter loggedUser={this.props.loggedUser} logout={() => this.logout()} />
+        <HeaderWithRouter loggedUser={this.props.loggedUser} />
         <div className="Container">
           {this.props.loggedUser ?
-            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7 }}>
+            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
               <Route path="/history" component={this.historyView} />
               <Route exact path="/" component={NewTripPage} />
               <Route path="/social" component={this.socialView} />
               <Route path="/userpage" component={UserPage} />
             </SwipeableRoutes>
             :
-            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7 }}>
+            <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
               <Route path="/history" component={this.historyView} />
               <Route exact path="/" component={NewTripPage} />
               <Route path="/social" component={this.socialView} />

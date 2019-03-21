@@ -64,10 +64,11 @@ class NewTripPage extends Component {
                 {this.state.pos ?
                     <div>
                         <Map pos={this.state.pos} saveTrip={this.saveTrip.bind(this)} loggedUser={this.props.loggedUser} ref={this.mapItem} />
+                        {this.props.loggedUser ? <button onClick={() => this.saveTrip()}>Save Trip</button> : null}
                     </div>
-                    : <div></div>
+                    : <h3>Enable location to plan a trip</h3>
                 }
-                {this.props.loggedUser ? <button onClick={() => this.saveTrip()}>Save Trip</button> : null}
+                
             </div>
         )
     }

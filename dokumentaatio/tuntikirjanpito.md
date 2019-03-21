@@ -9,4 +9,5 @@ PVM | KLO | TUNTIA | TEHTY |
 19.03.2019|11:00-20:00|9,0|Aloitettu kartan implementoimista ja refaktoroitu/kokeiltu sitä. Painittu pitkään.|
 19.03.2019|21:00-00:30|3,5|Jatkettu kartan implementointia. Korjattu overflow virheitä. Kartta toimii!|
 20.03.2019|15:00-21:00|6,0|Lisätty trippien tallentaminen, korjattu kartan directions panel ja parannettu ulkonäköä. Lisäksi aloitettu userpage teko|
+21.03.2019|12:30-XX|XX|Lisätty JWT-token authentikaatio. Implementoitu käyttäjän poistaminen ja pysyvä kirjautuminen.|
 **YHT**||29,5|

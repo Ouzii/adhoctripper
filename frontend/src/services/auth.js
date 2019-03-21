@@ -1,4 +1,5 @@
 import axios from 'axios'
+import decode from 'jwt-decode'
 
 let baseUrl = 'http://localhost:3000/api/auth'
 // if (process.env.REACT_APP_LOCAL !== 'true') {
@@ -8,13 +9,35 @@ let baseUrl = 'http://localhost:3000/api/auth'
 // }
 let token
 
-const setToken = (props) => {
-    token = `bearer ${props.token}`
+const setToken = (idToken) => {
+    window.localStorage.setItem("id_token", idToken)
+    token = idToken
+}
+
+const isTokenExpired = (token) => {
+    try {
+        const decoded = decode(token)
+        if (decoded.exp < Date.now() / 1000) {
+            return true
+        } else return false
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
+
+const isLoggedIn = () => {
+    const token = this.getToken()
+    return !!token && !isTokenExpired(token)
+}
+
+const getToken = () => {
+    return window.localStorage.getItem("id_token")
 }
 
 const config = () => {
     return {
-        headers: { 'Authorization': token }
+        headers: { 'Authorization': `bearer ${token}`, 'Token': token }
     }
 }
 
@@ -28,24 +51,24 @@ const login = async (user) => {
     return response.data
 }
 
-const getAll = async () => {
-    const response = await axios.get(baseUrl)
-    return response.data
-}
+// const getAll = async () => {
+//     const response = await axios.get(baseUrl)
+//     return response.data
+// }
 
-const getOne = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`)
-    return response.data
-}
+// const getOne = async (id) => {
+//     const response = await axios.get(`${baseUrl}/${id}`)
+//     return response.data
+// }
 
 const update = async (updatedUser, id) => {
     const response = await axios.put(`${baseUrl}/${id}`, updatedUser, config())
     return response.data
 }
 
-const remove = async (id) => {
-    const response = await axios.delete(`${baseUrl}/${id}`, config())
+const remove = async () => {
+    const response = await axios.delete(baseUrl, config())
     return response
 }
 
-export default { getAll, remove, update, setToken, getOne, register, login }
+export default { remove, update, setToken, register, login, isTokenExpired }

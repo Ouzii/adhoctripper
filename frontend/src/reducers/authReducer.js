@@ -10,6 +10,12 @@ const authReducer = (store = null, action) => {
 }
 
 export const setLoggedUser = (user) => {
+    if (!user) {
+        window.localStorage.removeItem('loggedUser')
+    } else {
+        window.localStorage.setItem('loggedUser', JSON.stringify(user))
+    }
+    
     return async (dispatch) => {
         dispatch({
             type: 'SET_USER',

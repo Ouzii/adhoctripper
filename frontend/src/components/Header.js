@@ -4,10 +4,6 @@ import { NavLink, withRouter } from 'react-router-dom'
 
 class Header extends Component {
 
-    handleLogout() {
-        this.props.logout()
-        this.props.history.push('/')
-    }
     render() {
         return (
             <div className="App-header" >

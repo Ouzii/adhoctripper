@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const tripRouter = require("./controllers/trip");
 const authRouter = require("./controllers/authentication");
+// const jwt = require('jsonwebtoken')
+// const expressJwt = require('express-jwt')
 
 
 mongoose
@@ -28,7 +30,7 @@ app.on("close", () => {
 
 app.use(cors());
 app.use(sslRedirect());
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static("build"));
 app.use("/api/trips", tripRouter);
 app.use("/api/auth", authRouter);

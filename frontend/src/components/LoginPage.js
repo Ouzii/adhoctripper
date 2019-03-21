@@ -29,10 +29,10 @@ class LoginPage extends Component {
         this.changeLoading()
         try {
             const response = await authService.login({ username: event.target.username.value, password: event.target.password.value })
-
-            if (response) {
-                await this.props.setLoggedUser(response)
-                this.props.notify(`Logged in as ${response.username}`, 3000)
+            if (response.user) {
+                await this.props.setLoggedUser(response.user)
+                this.props.notify(`Logged in as ${response.user.username}`, 3000)
+                authService.setToken(response.token)
                 this.props.history.push('/')
             }
         } catch (error) {
