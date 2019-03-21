@@ -38,9 +38,10 @@ class RegisteringPage extends Component {
             const response = await authService.register(newUser)
 
             if (response) {
-                this.props.setLoggedUser(response)
+                this.props.setLoggedUser(response.user)
+                authService.setToken(response.token)
                 this.props.history.push('/')
-                this.props.notify(`Registered and logged in as ${response.username}`, 3000)
+                this.props.notify(`Registered and logged in as ${response.user.username}`, 3000)
             }
         } catch (error) {
             this.setState({ loading: false, error: error.response.data.error })

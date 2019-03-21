@@ -2,11 +2,13 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import authReducer from './reducers/authReducer';
 import notificationReducer from './reducers/notificationReducer';
+import sharedTripsReducer from './reducers/sharedTripsReducer';
 
 
 const reducer = combineReducers({
   loggedUser: authReducer,
-  notification: notificationReducer
+  notification: notificationReducer,
+  sharedTrips: sharedTripsReducer
 })
 
 const store = createStore(

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
 class LocationInfo extends Component {
     constructor(props) {
@@ -34,20 +33,15 @@ class LocationInfo extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{border: '4px solid grey', maxWidth:'400px', margin: 'auto'}}><br/>
                 <form onSubmit={this.getGeocode.bind(this)} style={{ float: 'middle', margin: 'auto'}}>
-                    <label style={{ fontSize: '18', fontWeight: 'bold' }}>Address </label><br/>
+                    <label style={{ fontSize: '18', fontWeight: 'bold' }}>Give address to add a waypoint</label><br/>
                     <input type='text' className={'inputBar'} name='address' value={this.state.address} onChange={this.handleChange.bind(this)} placeholder={'Address..'} /><br/><br/>
                     <input type='submit' value='Add waypoint'/>
-                </form>
+                </form><br/>
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-
-})
-
-
-export default connect(mapStateToProps, null)(LocationInfo)
+export default LocationInfo

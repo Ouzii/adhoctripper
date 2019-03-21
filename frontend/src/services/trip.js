@@ -23,18 +23,23 @@ const saveOne = async (trip) => {
     return response.data
 }
 
-const getAll = async () => {
-    const response = await axios.get(baseUrl)
+const getShared = async () => {
+    const response = await axios.get(`${baseUrl}/shared`)
+    return response.data
+}
+
+const getOwn = async () => {
+    const response = await axios.get(baseUrl, config())
     return response.data
 }
 
 const getOne = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`)
+    const response = await axios.get(`${baseUrl}/${id}`, config())
     return response.data
 }
 
-const update = async (updatedUser, id) => {
-    const response = await axios.put(`${baseUrl}/${id}`, updatedUser, config())
+const update = async (updatedTrip, id) => {
+    const response = await axios.put(`${baseUrl}/${id}`, updatedTrip, config())
     return response.data
 }
 
@@ -43,4 +48,4 @@ const remove = async (id) => {
     return response
 }
 
-export default { getAll, remove, update, setToken, getOne, saveOne}
+export default { getShared, remove, update, setToken, getOwn, saveOne, getOne}

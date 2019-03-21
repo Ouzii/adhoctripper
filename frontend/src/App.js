@@ -7,10 +7,14 @@ import { Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import RegisteringPage from './components/RegisteringPage';
 import { setLoggedUser } from './reducers/authReducer';
+import { setSharedTrips } from './reducers/sharedTripsReducer'
 import NewTripPage from './components/NewTripPage';
 import Notification from './components/Notification';
 import UserPage from './components/UserPage';
 import authService from './services/auth'
+import BrowsingPage from './components/BrowsingPage';
+import tripService from './services/trip';
+import ShowRoute from './components/ShowRoute';
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +25,7 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // window.addEventListener('resize', () => this.setState(this.state))
     const token = JSON.parse(window.localStorage.getItem('id_token'))
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
@@ -32,6 +36,8 @@ class App extends Component {
       window.localStorage.removeItem('id_token')
       window.localStorage.removeItem('loggedUser')
     }
+    const sharedTrips = await tripService.getShared()
+    this.props.setSharedTrips(sharedTrips)
   }
 
   // componentWillUnmount() {
@@ -61,19 +67,27 @@ class App extends Component {
           {this.props.loggedUser ?
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
               <Route path="/history" component={this.historyView} />
-              <Route exact path="/" component={NewTripPage} />
-              <Route path="/social" component={this.socialView} />
+              <Route exact path="/" component={BrowsingPage} />
+              <Route path="/new" component={NewTripPage} />
               <Route path="/userpage" component={UserPage} />
+              <Route path="/trip/:id" defaultParams={{id: '0'}} render={({ match }) => (
+              <ShowRoute key={match.params.id} id={match.params.id}/>
+            )} />
             </SwipeableRoutes>
+            
             :
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
               <Route path="/history" component={this.historyView} />
-              <Route exact path="/" component={NewTripPage} />
-              <Route path="/social" component={this.socialView} />
+              <Route exact path="/" component={BrowsingPage} />
+              <Route path="/new" component={NewTripPage} />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisteringPage} />
+              <Route path="/trip/:id" defaultParams={{id: '0'}} render={({ match }) => (
+              <ShowRoute key={match.params.id} id={match.params.id}/>
+            )} />
             </SwipeableRoutes>
           }
+          
           <Notification />
         </div>
         
@@ -84,8 +98,9 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  loggedUser: state.loggedUser
+  loggedUser: state.loggedUser,
+  sharedTrips: state.sharedTrips
 })
 
 export default connect(mapStateToProps,
-  { setLoggedUser })(App)
+  { setLoggedUser, setSharedTrips })(App)

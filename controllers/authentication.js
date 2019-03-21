@@ -1,9 +1,9 @@
 const authRouter = require("express").Router();
 const Account = require("../models/account");
 const Trip = require("../models/trip");
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const secret = require('../utils/config').secret
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const secret = require('../utils/config').secret;
 
 authRouter.get("/:id", async (request, response) => {
   try {
@@ -34,7 +34,7 @@ authRouter.post("/login", async (request, response) => {
         response.status(400).send({ error: "Something went wrong, try again later" })
       }
       if (res) {
-        let token = jwt.sign({username: account.username}, secret, {expiresIn: "7d"})
+        let token = jwt.sign(Account.format(account), secret, {expiresIn: "7d"})
         return response.status(200).send({user: Account.format(account), token: token})
       } else {
         return response.status(403).send({ error: "Invalid username or password" })
@@ -66,7 +66,8 @@ authRouter.post("/register", async (request, response) => {
         email: body.email
       });
       let newAccount = await account.save();
-      return response.status(200).send(Account.format(newAccount));
+      let token = jwt.sign(Account.format(account), secret, {expiresIn: "7d"})
+      return response.status(200).send({user: Account.format(newAccount), token: token});
     })
 
   } catch (error) {
@@ -78,7 +79,7 @@ authRouter.post("/register", async (request, response) => {
 authRouter.delete("/", async (request, response) => {
   try {
     let decoded = jwt.verify(request.headers.token, secret)
-    const accountToBeDeleted = await Account.findOne({username: decoded.username});
+    const accountToBeDeleted = await Account.findById(decoded.id)
     if (!accountToBeDeleted) {
       return response.status(404).send({ error: "Account not found" });
     }

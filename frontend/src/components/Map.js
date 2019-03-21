@@ -120,6 +120,7 @@ class Map extends React.Component {
                         this.getMarkers(markers)
                     }
                 }}>Add current location</button><br/><br/>
+                <p>...or click the map to add waypoints</p>
                 <MapWithMarker
                     containerElement={<div style={{ width: window.innerWidth * 0.8, height: window.innerWidth * 0.8, maxHeight: '400px', maxWidth: '400px', margin: 'auto' }} />}
                     mapElement={<div style={{ height: `100%`, position: 'relative', zIndex: '1000' }} />}
