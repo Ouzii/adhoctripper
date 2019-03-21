@@ -1,8 +1,8 @@
 const authRouter = require("express").Router();
 const Account = require("../models/account");
+const Trip = require("../models/trip");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const expressJwt = require('express-jwt')
 const secret = require('../utils/config').secret
 
 authRouter.get("/:id", async (request, response) => {
@@ -82,6 +82,10 @@ authRouter.delete("/", async (request, response) => {
     if (!accountToBeDeleted) {
       return response.status(404).send({ error: "Account not found" });
     }
+    const usersTrips = await Trip.find({user: accountToBeDeleted._id})
+    await Promise.all(usersTrips.map(async (trip) => {
+      await Trip.findByIdAndDelete(trip._id)
+    }))
     await Account.findOneAndDelete(Account.findById(accountToBeDeleted._id));
     response.status(200).send(Account.format(accountToBeDeleted));
   } catch (error) {

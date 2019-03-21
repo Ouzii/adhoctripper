@@ -10,7 +10,7 @@ let baseUrl = 'http://localhost:3000/api/auth'
 let token
 
 const setToken = (idToken) => {
-    window.localStorage.setItem("id_token", idToken)
+    window.localStorage.setItem("id_token", JSON.stringify(idToken))
     token = idToken
 }
 
@@ -24,15 +24,6 @@ const isTokenExpired = (token) => {
         console.log(err)
         return false
     }
-}
-
-const isLoggedIn = () => {
-    const token = this.getToken()
-    return !!token && !isTokenExpired(token)
-}
-
-const getToken = () => {
-    return window.localStorage.getItem("id_token")
 }
 
 const config = () => {

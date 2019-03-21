@@ -24,7 +24,6 @@ tripRouter.post("/", async (request, response) => {
         if(body.start === '' || body.start === undefined || body.end === undefined || body.end === '' || JSON.parse(body.directions).routes.length === 0) {
             return response.status(400).json({ error: "Trip needs a route!"})
         }
-
         if (!body.user) {
             return response.status(403).json({ error: "Must be logged in"});
         }

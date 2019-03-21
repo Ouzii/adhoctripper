@@ -22,9 +22,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', () => this.setState(this.state))
-    const token = window.localStorage.getItem('id_token')
-    const user = window.localStorage.getItem('loggedUser')
+    // window.addEventListener('resize', () => this.setState(this.state))
+    const token = JSON.parse(window.localStorage.getItem('id_token'))
+    const user = JSON.parse(window.localStorage.getItem('loggedUser'))
     if(token && !authService.isTokenExpired(token) && user) {
       this.props.setLoggedUser(user)
       authService.setToken(token)
@@ -34,9 +34,9 @@ class App extends Component {
     }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize')
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize')
+  // }
 
   scrollToTop = index => {
     Array.from(this.el.containerNode.children).forEach((child, i) => {

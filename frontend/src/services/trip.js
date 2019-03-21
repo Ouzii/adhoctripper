@@ -8,18 +8,18 @@ let baseUrl = 'http://localhost:3000/api/trips'
 // }
 let token
 
-const setToken = (props) => {
-    token = `bearer ${props.token}`
+const setToken = (idToken) => {
+    token = idToken
 }
 
 const config = () => {
     return {
-        headers: { 'Authorization': token }
+        headers: { 'Authorization': `bearer ${token}`, 'Token': token }
     }
 }
 
 const saveOne = async (trip) => {
-    const response = await axios.post(baseUrl,trip)
+    const response = await axios.post(baseUrl, trip, config())
     return response.data
 }
 
