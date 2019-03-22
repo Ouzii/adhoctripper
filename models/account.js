@@ -4,7 +4,7 @@ const accountSchema = new mongoose.Schema({
   username: String,
   passwordHash: String,
   email: String,
-  vehicles: [ String ]
+  vehicles: {type: String, default: "[]"}
 });
 
 accountSchema.statics.format = account => {
@@ -12,7 +12,7 @@ accountSchema.statics.format = account => {
     id: account._id,
     username: account.username,
     email: account.email,
-    vehicles: account.vehicles
+    vehicles: JSON.parse(account.vehicles)
   };
 };
 

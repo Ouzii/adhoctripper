@@ -10,7 +10,8 @@ class UserPage extends Component {
         super(props)
 
         this.state = {
-
+            vehicleName: '',
+            vehicleConsumption: ''
         }
     }
 
@@ -31,20 +32,37 @@ class UserPage extends Component {
         }
     }
 
-    handleVehicleAdd() {
-        // TO BE IMPLEMENTED
+    handleVehicleAdd = async (event) => {
+        event.preventDefault()
+        try {
+            let newUser = this.props.loggedUser
+            const newVehiclesList = newUser.vehicles.map(vehicle => {return vehicle})
+            newVehiclesList.push({ name: event.target.vehicleName.value, consumption: event.target.vehicleConsumption.value })
+            newUser = { ...newUser, vehicles: newVehiclesList }
+            const updatedUser = await authService.update(newUser, newUser.id)
+            this.props.setLoggedUser(updatedUser)
+            this.props.notify("Vehicle added", 3000)
+            this.setState({ vehicleName: '', vehicleConsumption: '' })
+        } catch (error) {
+            this.props.notify(error.response.data.error, 3000)
+        }
+    }
+
+    handleChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
     }
 
     render() {
         return (
             <div>
+                <p>You have {this.props.loggedUser.vehicles.length} vehicles</p>
                 <h2>Add a vehicle</h2>
-                <form onSubmit={this.handleVehicleAdd()}>
-                    <input type="text" name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.." /><br />
-                    <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" /><br /><br />
+                <form onSubmit={this.handleVehicleAdd}>
+                    <input type="text" name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.." value={this.state.vehicleName} onChange={this.handleChange} /><br />
+                    <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" value={this.state.vehicleConsumption} onChange={this.handleChange} /><br /><br />
                     <input type="submit" value="Add vehicle" />
                 </form><br /><br />
-                <button onClick={() => this.logout()}>Logout</button><br/><br/>
+                <button onClick={() => this.logout()}>Logout</button><br /><br />
                 <button onClick={() => this.deleteAccount()}>Delete account</button>
             </div>
         )

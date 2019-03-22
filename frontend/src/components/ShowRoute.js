@@ -21,11 +21,13 @@ class ShowRoute extends Component {
 
     async componentDidMount() {
         try {
-            const trip = await tripService.getOne(this.state.id)
-            await this.setState({
-                trip
-            })
-            this.getRoute()
+            if (this.state.id !== '0') {
+                const trip = await tripService.getOne(this.state.id)
+                await this.setState({
+                    trip
+                })
+                this.getRoute()
+            }
         } catch (error) {
 
         }
@@ -49,7 +51,7 @@ class ShowRoute extends Component {
                 this.setState({
                     directions: result
                 })
-                this.directionsItem.current.setState({ directions: result, panel: this.panelItem})
+                this.directionsItem.current.setState({ directions: result, panel: this.panelItem })
             } else {
                 console.error(`error fetching directions ${result}`);
             }
@@ -78,7 +80,7 @@ class ShowRoute extends Component {
                                 position={this.state.trip.start}
                                 marker={<Mark markers={this.state.trip.markers} />}
                                 routeMapper={<RouteMapping directions={this.state.directions} ref={this.directionsItem} panel={this.panelItem} />}
-                            /><br/>
+                            /><br />
                             <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} />
                         </div>
                         :

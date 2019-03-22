@@ -53,7 +53,7 @@ const login = async (user) => {
 // }
 
 const update = async (updatedUser, id) => {
-    const response = await axios.put(`${baseUrl}/${id}`, updatedUser, config())
+    const response = await axios.put(`${baseUrl}/vehicles/${id}`, updatedUser, config())
     return response.data
 }
 
