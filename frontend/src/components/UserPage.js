@@ -4,6 +4,7 @@ import { setLoggedUser } from '../reducers/authReducer'
 import { notify } from '../reducers/notificationReducer'
 import { withRouter } from 'react-router-dom'
 import authService from '../services/auth'
+import VehicleModifyingItem from './VehicleModifyingItem';
 
 class UserPage extends Component {
     constructor(props) {
@@ -11,7 +12,10 @@ class UserPage extends Component {
 
         this.state = {
             vehicleName: '',
-            vehicleConsumption: ''
+            vehicleConsumption: '',
+            modifyVehicles: false,
+            vehicles: this.props.loggedUser.vehicles,
+            indexOfModifying: null
         }
     }
 
@@ -36,7 +40,7 @@ class UserPage extends Component {
         event.preventDefault()
         try {
             let newUser = this.props.loggedUser
-            const newVehiclesList = newUser.vehicles.map(vehicle => {return vehicle})
+            const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
             newVehiclesList.push({ name: event.target.vehicleName.value, consumption: event.target.vehicleConsumption.value })
             newUser = { ...newUser, vehicles: newVehiclesList }
             const updatedUser = await authService.update(newUser, newUser.id)
@@ -52,18 +56,62 @@ class UserPage extends Component {
         this.setState({ [event.target.name]: event.target.value })
     }
 
+    handleModifyClick() {
+        if (!this.state.modifyVehicles) {
+            this.setState({ modifyVehicles: true })
+        } else {
+
+        }
+    }
+
+    handleModifySave = async (vehicle) => {
+        try {
+            let newUser = this.props.loggedUser
+            const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
+            newVehiclesList[vehicle.id] = { name: vehicle.name, consumption: vehicle.consumption }
+            newUser = { ...newUser, vehicles: newVehiclesList }
+            const updatedUser = await authService.update(newUser, newUser.id)
+
+            this.props.setLoggedUser(updatedUser)
+            this.setState({
+                vehicles: newVehiclesList
+            })
+            this.props.notify("Saved", 3000)
+        } catch (error) {
+            console.log(error)
+            this.props.notify(error.response.data.error, 3000)
+        }
+
+    }
+
     render() {
         return (
             <div>
-                <p>You have {this.props.loggedUser.vehicles.length} vehicles</p>
-                <h2>Add a vehicle</h2>
-                <form onSubmit={this.handleVehicleAdd}>
-                    <input type="text" name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.." value={this.state.vehicleName} onChange={this.handleChange} /><br />
-                    <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" value={this.state.vehicleConsumption} onChange={this.handleChange} /><br /><br />
-                    <input type="submit" value="Add vehicle" />
-                </form><br /><br />
-                <button onClick={() => this.logout()}>Logout</button><br /><br />
-                <button onClick={() => this.deleteAccount()}>Delete account</button>
+
+                <div style={{ border: '4px solid grey' }}>
+                    <p>You have {this.props.loggedUser.vehicles.length} vehicles</p>
+                    {this.state.modifyVehicles ?
+                        <div>
+                            {this.state.vehicles.map(vehicle => <VehicleModifyingItem id={this.state.vehicles.indexOf(vehicle)} vehicle={vehicle} saveVehicleModify={this.handleModifySave.bind(this)} key={`${vehicle.name}+${vehicle.consumption}+${Math.random(100)}`} />)}
+                        </div>
+                        :
+                        <div>
+                            <h2>Add a vehicle</h2>
+                            <form onSubmit={this.handleVehicleAdd}>
+                                <input type="text" required name="vehicleName" className={'inputBar'} placeholder="Name your vehicle.." value={this.state.vehicleName} onChange={this.handleChange} /><br />
+                                <input type="number" required className={'inputBar'} name="vehicleConsumption" min="0" step="0.1" placeholder="Consumption (l/100km)" value={this.state.vehicleConsumption} onChange={this.handleChange} /><br /><br />
+                                <input type="submit" value="Add vehicle" />
+                            </form><br />
+                        </div>
+                    }
+                    <button onClick={() => this.setState({ modifyVehicles: !this.state.modifyVehicles })}>{this.state.modifyVehicles ? 'Close' : 'Modify vehicles'}</button><br /><br />
+                </div><br />
+                <div style={{ border: '4px solid grey' }}>
+                <br/>
+                    <button onClick={() => this.logout()}>Logout</button><br /><br />
+                    <button onClick={() => this.deleteAccount()}>Delete account</button><br/>
+                    <br/>
+                </div>
             </div>
         )
     }

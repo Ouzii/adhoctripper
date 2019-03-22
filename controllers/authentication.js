@@ -76,6 +76,10 @@ authRouter.post("/register", async (request, response) => {
   }
 })
 
+authRouter.put("/vehicles/:id/modify", async (request, response) => {
+
+})
+
 authRouter.put("/vehicles/:id", async (request, response) => {
   try {
     let decoded = jwt.verify(request.headers.token, secret)
