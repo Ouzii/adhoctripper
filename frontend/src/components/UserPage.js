@@ -11,11 +11,9 @@ class UserPage extends Component {
         super(props)
 
         this.state = {
-            vehicleName: '',
-            vehicleConsumption: '',
             modifyVehicles: false,
             vehicles: this.props.loggedUser.vehicles,
-            indexOfModifying: null
+            estFuelPrice: this.props.loggedUser.estFuelPrice ? this.props.loggedUser.estFuelPrice : 0
         }
     }
 
@@ -43,7 +41,7 @@ class UserPage extends Component {
             const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
             newVehiclesList.push({ name: event.target.vehicleName.value, consumption: event.target.vehicleConsumption.value })
             newUser = { ...newUser, vehicles: newVehiclesList }
-            const updatedUser = await authService.update(newUser, newUser.id)
+            const updatedUser = await authService.updateVehicles(newUser, newUser.id)
             this.props.setLoggedUser(updatedUser)
             this.props.notify("Vehicle added", 3000)
             this.setState({ vehicleName: '', vehicleConsumption: '' })
@@ -56,21 +54,13 @@ class UserPage extends Component {
         this.setState({ [event.target.name]: event.target.value })
     }
 
-    handleModifyClick() {
-        if (!this.state.modifyVehicles) {
-            this.setState({ modifyVehicles: true })
-        } else {
-
-        }
-    }
-
     handleModifySave = async (vehicle) => {
         try {
             let newUser = this.props.loggedUser
             const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
             newVehiclesList[vehicle.id] = { name: vehicle.name, consumption: vehicle.consumption }
             newUser = { ...newUser, vehicles: newVehiclesList }
-            const updatedUser = await authService.update(newUser, newUser.id)
+            const updatedUser = await authService.updateVehicles(newUser, newUser.id)
 
             this.props.setLoggedUser(updatedUser)
             this.setState({
@@ -84,11 +74,31 @@ class UserPage extends Component {
 
     }
 
+    changeFuelPrice = async (event) => {
+        event.preventDefault()
+        try {
+            let newUser = this.props.loggedUser
+            newUser.estFuelPrice = this.state.estFuelPrice
+            const updatedUser = await authService.updateEstFuelPrice(newUser, newUser.id)
+            this.props.setLoggedUser(updatedUser)
+            this.props.notify("Saved", 3000)
+        } catch (error) {
+            console.log(error)
+            this.props.notify(error.response.data.error, 3000)
+        }
+    }
+
     render() {
         return (
             <div>
-
+                <form onSubmit={this.changeFuelPrice} style={{ border: 'solid grey', borderWidth: '4px 4px 0px 4px' }}>
+                    <br />
+                    <label>Estimated fuel price (eur/l)</label><br />
+                    <input type="number" name="estFuelPrice" value={this.state.estFuelPrice} onChange={this.handleChange} placeholder="Estimated fuel price.." /><br />
+                    <input type="submit" value="Save" /><br /><br />
+                </form>
                 <div style={{ border: '4px solid grey' }}>
+
                     <p>You have {this.props.loggedUser.vehicles.length} vehicles</p>
                     {this.state.modifyVehicles ?
                         <div>
@@ -105,12 +115,12 @@ class UserPage extends Component {
                         </div>
                     }
                     <button onClick={() => this.setState({ modifyVehicles: !this.state.modifyVehicles })}>{this.state.modifyVehicles ? 'Close' : 'Modify vehicles'}</button><br /><br />
-                </div><br />
-                <div style={{ border: '4px solid grey' }}>
-                <br/>
+                </div>
+                <div style={{ border: 'solid grey', borderWidth: '0px 4px 4px 4px' }}>
+                    <br />
                     <button onClick={() => this.logout()}>Logout</button><br /><br />
-                    <button onClick={() => this.deleteAccount()}>Delete account</button><br/>
-                    <br/>
+                    <button onClick={() => this.deleteAccount()}>Delete account</button><br />
+                    <br />
                 </div>
             </div>
         )

@@ -52,8 +52,13 @@ const login = async (user) => {
 //     return response.data
 // }
 
-const update = async (updatedUser, id) => {
+const updateVehicles = async (updatedUser, id) => {
     const response = await axios.put(`${baseUrl}/vehicles/${id}`, updatedUser, config())
+    return response.data
+}
+
+const updateEstFuelPrice = async (updatedUser, id) => {
+    const response = await axios.put(`${baseUrl}/fuel/${id}`, updatedUser, config())
     return response.data
 }
 
@@ -62,4 +67,4 @@ const remove = async () => {
     return response
 }
 
-export default { remove, update, setToken, register, login, isTokenExpired }
+export default { remove, updateVehicles, updateEstFuelPrice, setToken, register, login, isTokenExpired }

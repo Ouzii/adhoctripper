@@ -4,7 +4,8 @@ const accountSchema = new mongoose.Schema({
   username: String,
   passwordHash: String,
   email: String,
-  vehicles: {type: String, default: "[]"}
+  vehicles: {type: String, default: "[]"},
+  estFuelPrice: Number
 });
 
 accountSchema.statics.format = account => {
@@ -12,7 +13,8 @@ accountSchema.statics.format = account => {
     id: account._id,
     username: account.username,
     email: account.email,
-    vehicles: JSON.parse(account.vehicles)
+    vehicles: JSON.parse(account.vehicles),
+    estFuelPrice: account.estFuelPrice
   };
 };
 

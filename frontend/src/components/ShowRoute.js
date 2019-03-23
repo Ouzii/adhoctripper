@@ -11,7 +11,9 @@ class ShowRoute extends Component {
         super(props)
         this.state = {
             id: props.id,
-            trip: null
+            trip: null,
+            length: null,
+            directions: null
         }
 
         this.directionsService = new google.maps.DirectionsService()
@@ -48,8 +50,11 @@ class ShowRoute extends Component {
             travelMode: google.maps.TravelMode.DRIVING
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
+                
+                const length = result.routes[0].legs.map(leg => leg.distance.value)
                 this.setState({
-                    directions: result
+                    directions: result,
+                    length: length.reduce((total, current) => { return total + current })
                 })
                 this.directionsItem.current.setState({ directions: result, panel: this.panelItem })
             } else {
@@ -74,6 +79,7 @@ class ShowRoute extends Component {
                 {this.state.trip ?
                     this.state.directions ?
                         <div>
+                            {this.state.length ? <div>Length: {this.state.length / 1000 }km</div> : <div/>}
                             <MapWithMarker
                                 containerElement={<div style={{ width: window.innerWidth * 0.8, height: window.innerWidth * 0.9, maxHeight: '400px', maxWidth: '400px', margin: 'auto' }} />}
                                 mapElement={<div style={{ height: `100%`, position: 'relative', zIndex: '1000' }} />}

@@ -76,8 +76,23 @@ authRouter.post("/register", async (request, response) => {
   }
 })
 
-authRouter.put("/vehicles/:id/modify", async (request, response) => {
+authRouter.put("/fuel/:id/", async (request, response) => {
+  try {
+    let decoded = jwt.verify(request.headers.token, secret)
+    if (!request.body.estFuelPrice) {
+      return response.status(400).send({ error: "Content missing" })
+    }
 
+    const updatedAccount = {
+      estFuelPrice: request.body.estFuelPrice
+    }
+
+    const savedAccount = await Account.findByIdAndUpdate(decoded.id, updatedAccount, { new: true })
+    return response.status(200).send(Account.format(savedAccount))
+  } catch (error) {
+    console.log(error)
+    response.status(400).send({ error: "Something went wrong, try again later" });
+  }
 })
 
 authRouter.put("/vehicles/:id", async (request, response) => {
@@ -97,7 +112,7 @@ authRouter.put("/vehicles/:id", async (request, response) => {
     if (errors) {
       return response.status(400).send({ error: "Vehicle needs a name and consumption" })
     }
-    console.log("still through")
+
     const updatedAccount = {
       vehicles: JSON.stringify(request.body.vehicles)
     }
