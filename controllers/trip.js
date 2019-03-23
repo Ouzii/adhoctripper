@@ -5,7 +5,7 @@ const secret = require('../utils/config').secret;
 
 tripRouter.get("/shared", async (request, response) => {
     try {
-        const sharedTrips = await Trip.find({shared: true})
+        const sharedTrips = await Trip.find({ shared: true })
         return response.status(200).send(sharedTrips.map(trip => Trip.format(trip)))
     } catch (error) {
         console.log(error)
@@ -14,11 +14,16 @@ tripRouter.get("/shared", async (request, response) => {
 
 tripRouter.get("/personal", async (request, response) => {
     try {
-        const decoded = jwt.verify(request.headers.token, secret)
-        const personalTrips = await Trip.find({ user: decoded.id })
-        return response.status(200).send(personalTrips.map(trip => Trip.format(trip)))
+        if (request.headers.token === undefined) {
+            return response.status(200).send([])
+        } else {
+            const decoded = jwt.verify(request.headers.token, secret)
+            const personalTrips = await Trip.find({ user: decoded.id })
+            return response.status(200).send(personalTrips.map(trip => Trip.format(trip)))
+        }
     } catch (error) {
         console.log(error)
+        response.status(400).send({ error: 'No personal trips' })
     }
 })
 
@@ -34,10 +39,10 @@ tripRouter.get("/:id", async (request, response) => {
         if (trip.user === decoded.id) {
             return response.status(200).send(Trip.format(trip));
         }
-        return response.status(403).send({error: 'Trip forbidden'});
+        return response.status(403).send({ error: 'Trip forbidden' });
     } catch (error) {
         console.log(error);
-        response.status(400).send({ error: `Trip with id ${request.params.id} not found` });
+        response.status(400).send({ error: `Trip with id ${request.params.id} not found` })
     }
 });
 
@@ -48,13 +53,13 @@ tripRouter.post("/", async (request, response) => {
             return response.status(400).json({ error: "Content missing" });
         }
 
-        if(body.start === '' || body.start === undefined || body.end === undefined || body.end === '' 
-        // || JSON.parse(body.directions).routes.length === 0
+        if (body.start === '' || body.start === undefined || body.end === undefined || body.end === ''
+            // || JSON.parse(body.directions).routes.length === 0
         ) {
-            return response.status(400).json({ error: "Trip needs a route!"})
+            return response.status(400).json({ error: "Trip needs a route!" })
         }
         if (!body.user) {
-            return response.status(403).json({ error: "Must be logged in"});
+            return response.status(403).json({ error: "Must be logged in" });
         }
         const trip = new Trip({
             name: body.name,
@@ -80,14 +85,14 @@ tripRouter.put("/:id", async (request, response) => {
     try {
         const decoded = jwt.verify(request.headers.token, secret)
         const trip = await Trip.findById(request.params.id)
-        if (''+trip.user === decoded.id) {
+        if ('' + trip.user === decoded.id) {
             const tripToBeUpdated = {
                 ...request.body,
                 start: JSON.stringify(request.body.start),
                 end: JSON.stringify(request.body.end),
                 markers: JSON.stringify(request.body.markers)
             }
-            const updatedTrip = await Trip.findByIdAndUpdate(trip.id, tripToBeUpdated, {new: true})
+            const updatedTrip = await Trip.findByIdAndUpdate(trip.id, tripToBeUpdated, { new: true })
             return response.status(200).send(Trip.format(updatedTrip))
         } else {
             return response.status(403).send({ error: 'Not authorized to update this trip' })

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setLoggedUser } from '../reducers/authReducer'
+import { setPersonalTrips } from '../reducers/personalTripsReducer'
 import { notify } from '../reducers/notificationReducer'
 import { withRouter } from 'react-router-dom'
 import authService from '../services/auth'
@@ -19,6 +20,7 @@ class UserPage extends Component {
 
     logout() {
         this.props.setLoggedUser(null)
+        this.props.setPersonalTrips([])
         window.localStorage.removeItem('id_token')
         this.props.history.push('/')
         this.props.notify("Logged out", 3000)
@@ -132,4 +134,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, { setLoggedUser, notify })(withRouter(UserPage))
+export default connect(mapStateToProps, { setLoggedUser, notify, setPersonalTrips })(withRouter(UserPage))

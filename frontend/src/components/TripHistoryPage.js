@@ -8,6 +8,7 @@ class TripHistoryPage extends Component {
   render() {
     return (
       <div>
+          <h1>My trips</h1>
         {this.props.personalTrips ? (this.props.personalTrips.length === 0 ? <h3>No personal trips</h3> : <TripList trips={this.props.personalTrips} personal={true} />) : <Spinner style={{ margin: 'auto'}} name='circle' fadeIn='none' color='white' /> }
       </div>
     )

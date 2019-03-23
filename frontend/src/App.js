@@ -35,14 +35,15 @@ class App extends Component {
       this.props.setLoggedUser(user)
       authService.setToken(token)
       tripService.setToken(token)
-      const personalTrips = await tripService.getOwn()
-      this.props.setPersonalTrips(personalTrips)
     } else {
       window.localStorage.removeItem('id_token')
       window.localStorage.removeItem('loggedUser')
     }
     const sharedTrips = await tripService.getShared()
     this.props.setSharedTrips(sharedTrips)
+    
+    const personalTrips = await tripService.getOwn()
+    this.props.setPersonalTrips(personalTrips)
   }
 
   // componentWillUnmount() {
@@ -64,7 +65,7 @@ class App extends Component {
         <div className="Container">
           {this.props.loggedUser ?
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
-              <Route path="/history" component={TripHistoryPage} />
+              <Route path="/personal" component={TripHistoryPage} />
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
               <Route path="/userpage" component={UserPage} />
@@ -75,7 +76,7 @@ class App extends Component {
             
             :
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
-              <Route path="/history" component={TripHistoryPage} />
+              <Route path="/personal" component={TripHistoryPage} />
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
               <Route path="/login" component={LoginPage} />

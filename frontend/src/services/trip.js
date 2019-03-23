@@ -13,8 +13,12 @@ const setToken = (idToken) => {
 }
 
 const config = () => {
-    return {
-        headers: { 'Authorization': `bearer ${token}`, 'Token': token }
+    if (token) {
+        return {
+            headers: { 'Authorization': `bearer ${token}`, 'Token': token }
+        }
+    } else {
+        return null
     }
 }
 
