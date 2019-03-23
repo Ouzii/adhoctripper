@@ -94,7 +94,7 @@ class UserPage extends Component {
                 <form onSubmit={this.changeFuelPrice} style={{ border: 'solid grey', borderWidth: '4px 4px 0px 4px' }}>
                     <br />
                     <label>Estimated fuel price (eur/l)</label><br />
-                    <input type="number" name="estFuelPrice" value={this.state.estFuelPrice} onChange={this.handleChange} placeholder="Estimated fuel price.." /><br />
+                    <input type="number" name="estFuelPrice" value={this.state.estFuelPrice} onChange={this.handleChange} placeholder="Estimated fuel price.." /><br /><br />
                     <input type="submit" value="Save" /><br /><br />
                 </form>
                 <div style={{ border: '4px solid grey' }}>

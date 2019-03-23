@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect, withRouter } from 'react-router-dom'
 import Spinner from 'react-spinkit'
 import authService from '../services/auth'
+import tripService from '../services/trip'
 import { setLoggedUser } from '../reducers/authReducer'
 import { notify } from '../reducers/notificationReducer'
 
@@ -40,6 +41,7 @@ class RegisteringPage extends Component {
             if (response) {
                 this.props.setLoggedUser(response.user)
                 authService.setToken(response.token)
+                tripService.setToken(response.token)
                 this.props.history.push('/')
                 this.props.notify(`Registered and logged in as ${response.user.username}`, 3000)
             }

@@ -12,6 +12,16 @@ tripRouter.get("/shared", async (request, response) => {
     }
 })
 
+tripRouter.get("/personal", async (request, response) => {
+    try {
+        const decoded = jwt.verify(request.headers.token, secret)
+        const personalTrips = await Trip.find({ user: decoded.id })
+        return response.status(200).send(personalTrips.map(trip => Trip.format(trip)))
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 tripRouter.get("/:id", async (request, response) => {
     try {
@@ -66,17 +76,39 @@ tripRouter.post("/", async (request, response) => {
     }
 });
 
+tripRouter.put("/:id", async (request, response) => {
+    try {
+        const decoded = jwt.verify(request.headers.token, secret)
+        const trip = await Trip.findById(request.params.id)
+        if (''+trip.user === decoded.id) {
+            const tripToBeUpdated = {
+                ...request.body,
+                start: JSON.stringify(request.body.start),
+                end: JSON.stringify(request.body.end),
+                markers: JSON.stringify(request.body.markers)
+            }
+            const updatedTrip = await Trip.findByIdAndUpdate(trip.id, tripToBeUpdated, {new: true})
+            return response.status(200).send(Trip.format(updatedTrip))
+        } else {
+            return response.status(403).send({ error: 'Not authorized to update this trip' })
+        }
+    } catch (error) {
+        console.log(error)
+        response.status(400).send({ error: "Something went wrong, try again later" })
+    }
+})
+
 tripRouter.delete("/:id", async (request, response) => {
     try {
-        const tripToBeDeleted = await Trip.findById(request.params.id);
+        const tripToBeDeleted = await Trip.findById(request.params.id)
         if (!tripToBeDeleted) {
-            return response.status(404).send({ error: "Trip not found" });
+            return response.status(404).send({ error: "Trip not found" })
         }
-        await Trip.findOneAndDelete(Trip.findById(request.params.id));
-        response.status(200).send(Trip.format(tripToBeDeleted));
+        await Trip.findOneAndDelete(Trip.findById(request.params.id))
+        response.status(200).send(Trip.format(tripToBeDeleted))
     } catch (error) {
         console.log(error);
-        response.status(400).send({ error: "Something went wrong, try again later" });
+        response.status(400).send({ error: "Something went wrong, try again later" })
     }
 });
 

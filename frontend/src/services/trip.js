@@ -29,7 +29,7 @@ const getShared = async () => {
 }
 
 const getOwn = async () => {
-    const response = await axios.get(baseUrl, config())
+    const response = await axios.get(`${baseUrl}/personal`, config())
     return response.data
 }
 

@@ -5,6 +5,7 @@ import tripService from '../services/trip'
 import { withGoogleMap, GoogleMap } from 'react-google-maps'
 import Mark from './Mark'
 import RouteMapping from './RouteMapping'
+import TripPriceInfo from './TripPriceInfo';
 
 class ShowRoute extends Component {
     constructor(props) {
@@ -13,7 +14,9 @@ class ShowRoute extends Component {
             id: props.id,
             trip: null,
             length: null,
-            directions: null
+            directions: null,
+            vehicle: null,
+            estFuelPrice: null
         }
 
         this.directionsService = new google.maps.DirectionsService()
@@ -26,7 +29,9 @@ class ShowRoute extends Component {
             if (this.state.id !== '0') {
                 const trip = await tripService.getOne(this.state.id)
                 await this.setState({
-                    trip
+                    trip: trip,
+                    vehicle: this.props.loggedUser ? this.props.loggedUser.vehicles[0] : null,
+                    estFuelPrice: this.props.loggedUser ? this.props.loggedUser.estFuelPrice : 0
                 })
                 this.getRoute()
             }
@@ -50,7 +55,7 @@ class ShowRoute extends Component {
             travelMode: google.maps.TravelMode.DRIVING
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-                
+
                 const length = result.routes[0].legs.map(leg => leg.distance.value)
                 this.setState({
                     directions: result,
@@ -76,13 +81,19 @@ class ShowRoute extends Component {
         ));
         return (
             <div>
-                {this.state.trip ?
+                {this.state.trip && this.state.directions && this.state.length && this.state.vehicle ?
                     this.state.directions ?
                         <div>
-                            {this.state.length ? <div>Length: {this.state.length / 1000 }km</div> : <div/>}
+                            {this.state.length ?
+                                <div>
+                                    <TripPriceInfo user={this.props.loggedUser} length={this.state.length} />
+                                </div>
+                                :
+                                <div />}
+                            <br />
                             <MapWithMarker
                                 containerElement={<div style={{ width: window.innerWidth * 0.8, height: window.innerWidth * 0.9, maxHeight: '400px', maxWidth: '400px', margin: 'auto' }} />}
-                                mapElement={<div style={{ height: `100%`, position: 'relative', zIndex: '1000' }} />}
+                                mapElement={<div style={{ height: `100%`, position: 'relative' }} />}
                                 position={this.state.trip.start}
                                 marker={<Mark markers={this.state.trip.markers} />}
                                 routeMapper={<RouteMapping directions={this.state.directions} ref={this.directionsItem} panel={this.panelItem} />}
@@ -100,7 +111,7 @@ class ShowRoute extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+    loggedUser: state.loggedUser
 })
 
 

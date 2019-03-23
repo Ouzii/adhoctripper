@@ -6,14 +6,15 @@ class TripList extends Component {
       super(props)
     
       this.state = {
-         trips: props.trips
+         trips: props.trips,
+         personal: props.personal
       }
     }
     
   render() {
     return (
       <div>
-        {this.state.trips.map(trip => <TripListItem trip={trip} key={trip.id}/>)}
+        {this.state.trips.map(trip => <TripListItem trip={trip} personal={this.state.personal} key={trip.id}/>)}
       </div>
     )
   }

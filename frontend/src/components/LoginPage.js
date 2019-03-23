@@ -5,6 +5,7 @@ import { Redirect, NavLink, withRouter } from 'react-router-dom'
 import { setLoggedUser } from '../reducers/authReducer'
 import { notify } from '../reducers/notificationReducer'
 import authService from '../services/auth'
+import tripService from '../services/trip'
 
 class LoginPage extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class LoginPage extends Component {
                 await this.props.setLoggedUser(response.user)
                 this.props.notify(`Logged in as ${response.user.username}`, 3000)
                 authService.setToken(response.token)
+                tripService.setToken(response.token)
                 this.props.history.push('/')
             }
         } catch (error) {
