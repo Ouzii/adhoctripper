@@ -5,7 +5,7 @@ import tripService from '../services/trip'
 import { withGoogleMap, GoogleMap } from 'react-google-maps'
 import Mark from './Mark'
 import RouteMapping from './RouteMapping'
-import TripPriceInfo from './TripPriceInfo';
+import TripPriceInfo from './TripPriceInfo'
 
 class ShowRoute extends Component {
     constructor(props) {
@@ -16,7 +16,8 @@ class ShowRoute extends Component {
             length: null,
             directions: null,
             vehicle: null,
-            estFuelPrice: null
+            estFuelPrice: null,
+            googleLink: 'https://www.google.com/maps/dir/'
         }
 
         this.directionsService = new google.maps.DirectionsService()
@@ -28,16 +29,26 @@ class ShowRoute extends Component {
         try {
             if (this.state.id !== '0') {
                 const trip = await tripService.getOne(this.state.id)
+                let googleLink = this.state.googleLink+`${trip.start.lat},${trip.start.lng}/`
+                trip.markers.forEach(marker => {
+                    googleLink = googleLink+`${marker.lat},${marker.lng}/`
+                })
+                googleLink = googleLink+`${trip.end.lat},${trip.end.lng}`
                 await this.setState({
                     trip: trip,
                     vehicle: this.props.loggedUser ? this.props.loggedUser.vehicles[0] : null,
-                    estFuelPrice: this.props.loggedUser ? this.props.loggedUser.estFuelPrice : 0
+                    estFuelPrice: this.props.loggedUser ? this.props.loggedUser.estFuelPrice : 0,
+                    googleLink: googleLink
                 })
-                this.getRoute()
+                await this.getRoute()
             }
         } catch (error) {
-
+            console.log(error)
         }
+
+    }
+
+    async componentWillReceiveProps() {
 
     }
 
@@ -98,7 +109,8 @@ class ShowRoute extends Component {
                                 marker={<Mark markers={this.state.trip.markers} />}
                                 routeMapper={<RouteMapping directions={this.state.directions} ref={this.directionsItem} panel={this.panelItem} />}
                             /><br />
-                            <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} />
+                            <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} /><br/>
+                            <a href={this.state.googleLink} title="Google Maps" target="_blank" rel="noopener noreferrer">Open in google</a>
                         </div>
                         :
                         <div />

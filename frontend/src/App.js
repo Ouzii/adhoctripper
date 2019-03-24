@@ -25,6 +25,7 @@ class App extends Component {
     this.state = {
 
     }
+    tripService.checkIfTokenInLocal()
   }
 
   async componentDidMount() {
@@ -32,18 +33,18 @@ class App extends Component {
     const token = JSON.parse(window.localStorage.getItem('id_token'))
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
     if(token && !authService.isTokenExpired(token) && user) {
-      this.props.setLoggedUser(user)
-      authService.setToken(token)
-      tripService.setToken(token)
+      await this.props.setLoggedUser(user)
+      await authService.setToken(token)
+      await tripService.setToken(token)
     } else {
       window.localStorage.removeItem('id_token')
       window.localStorage.removeItem('loggedUser')
     }
     const sharedTrips = await tripService.getShared()
-    this.props.setSharedTrips(sharedTrips)
+    await this.props.setSharedTrips(sharedTrips)
     
-    const personalTrips = await tripService.getOwn()
-    this.props.setPersonalTrips(personalTrips)
+    const personalTrips = await tripService.getPersonal()
+    await this.props.setPersonalTrips(personalTrips)
   }
 
   // componentWillUnmount() {

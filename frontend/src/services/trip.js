@@ -11,6 +11,12 @@ let token
 const setToken = (idToken) => {
     token = idToken
 }
+const checkIfTokenInLocal = () => {
+    const token = JSON.parse(window.localStorage.getItem('id_token'))
+    if (token) {
+        setToken(token)
+    }
+}
 
 const config = () => {
     if (token) {
@@ -32,14 +38,19 @@ const getShared = async () => {
     return response.data
 }
 
-const getOwn = async () => {
+const getPersonal = async () => {
     const response = await axios.get(`${baseUrl}/personal`, config())
     return response.data
 }
 
 const getOne = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`, config())
-    return response.data
+    if(token) {
+        const response = await axios.get(`${baseUrl}/${id}`, config())
+        return response.data
+    }
+    return setTimeout(() => {
+            getOne(id)
+        }, 3000)
 }
 
 const update = async (updatedTrip, id) => {
@@ -52,4 +63,4 @@ const remove = async (id) => {
     return response
 }
 
-export default { getShared, remove, update, setToken, getOwn, saveOne, getOne}
+export default { getShared, remove, update, setToken, getPersonal, saveOne, getOne, checkIfTokenInLocal}

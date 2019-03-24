@@ -34,9 +34,8 @@ tripRouter.get("/:id", async (request, response) => {
         if (trip.shared) {
             return response.status(200).send(Trip.format(trip));
         }
-
         let decoded = jwt.verify(request.headers.token, secret)
-        if (trip.user === decoded.id) {
+        if (''+trip.user === decoded.id) {
             return response.status(200).send(Trip.format(trip));
         }
         return response.status(403).send({ error: 'Trip forbidden' });

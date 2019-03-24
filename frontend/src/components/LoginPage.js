@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Spinner from 'react-spinkit'
 import { Redirect, NavLink, withRouter } from 'react-router-dom'
 import { setLoggedUser } from '../reducers/authReducer'
+import { setSharedTrips } from '../reducers/sharedTripsReducer'
+import { setPersonalTrips } from '../reducers/personalTripsReducer'
 import { notify } from '../reducers/notificationReducer'
 import authService from '../services/auth'
 import tripService from '../services/trip'
@@ -36,6 +38,11 @@ class LoginPage extends Component {
                 authService.setToken(response.token)
                 tripService.setToken(response.token)
                 this.props.history.push('/')
+                const personalTrips = await tripService.getPersonal()
+                this.props.setPersonalTrips(personalTrips)
+                const sharedTrips = await tripService.getShared()
+                this.props.setSharedTrips(sharedTrips)
+
             }
         } catch (error) {
             console.log(error)
@@ -87,4 +94,4 @@ const mapStateToProps = (state) => ({
     loggedUser: state.loggedUser
 })
 
-export default connect(mapStateToProps, { setLoggedUser, notify })(withRouter(LoginPage))
+export default connect(mapStateToProps, { setLoggedUser, notify, setSharedTrips, setPersonalTrips })(withRouter(LoginPage))
