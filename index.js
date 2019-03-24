@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const tripRouter = require("./controllers/trip");
 const authRouter = require("./controllers/authentication");
-// const jwt = require('jsonwebtoken')
-// const expressJwt = require('express-jwt')
 
 
 mongoose

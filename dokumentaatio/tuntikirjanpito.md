@@ -12,5 +12,5 @@ PVM | KLO | TUNTIA | TEHTY |
 21.03.2019|12:30-20:30|8,0|Lisätty JWT-token authentikaatio. Implementoitu käyttäjän poistaminen ja pysyvä kirjautuminen. Lisätty jaettujen trippien sivu ja yksittäisen tripin näyttäminen kartalla.|
 22.03.2019|13:30-17:00|3,5|Lisätty ajoneuvon lisääminen ja muokkaaminen.|
 23.03.2019|12:30-18:00|5,5|Lisätty käyttäjälle arvioitu bensan hinta. Lisätty käyttäjän omien trippien sivun ja parannettu sharedTrips sivua. Lisätty hintatiedot tripin tarkastelunäkymään. Korjattu uloskirjautuminen.|
-24.03.2019|10:30-12:30|2,0|Korjattu sisäänkirjautuminen ja lisätty showRoute-komponenttiin linkki, millä voi siirtyä navigoimaan google mapsiin (puhelimella). Lisätty tripin poisto ja korjattu re-render ongelmat trip listoissa. Pistetty Herokuun.|
-**YHT**||**48,5**|
+24.03.2019|10:30-13:00|2,0|Korjattu sisäänkirjautuminen ja lisätty showRoute-komponenttiin linkki, millä voi siirtyä navigoimaan google mapsiin (puhelimella). Lisätty tripin poisto ja korjattu re-render ongelmat trip listoissa. Pistetty Herokuun.|
+**YHT**||**49,0**|
