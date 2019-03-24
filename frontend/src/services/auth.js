@@ -2,11 +2,11 @@ import axios from 'axios'
 import decode from 'jwt-decode'
 
 let baseUrl = 'http://localhost:3000/api/auth'
-// if (process.env.REACT_APP_LOCAL !== 'true') {
-//     baseUrl = process.env.REACT_APP_BASE_URL+'/api/auth'
-// } else {
-//     baseUrl = `http://localhost:3000/api/auth`
-// }
+if (process.env.REACT_APP_LOCAL !== 'true') {
+    baseUrl = 'https://adhoctripper.herokuapp.com/api/auth'
+} else {
+    baseUrl = `http://localhost:3000/api/auth`
+}
 let token
 
 const setToken = (idToken) => {

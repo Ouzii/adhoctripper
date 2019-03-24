@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 let baseUrl = 'http://localhost:3000/api/trips'
-// if (process.env.REACT_APP_LOCAL !== 'true') {
-//     baseUrl = process.env.REACT_APP_BASE_URL+'/api/auth'
-// } else {
-//     baseUrl = `http://localhost:3000/api/auth`
-// }
+if (process.env.REACT_APP_LOCAL !== 'true') {
+    baseUrl = 'https://adhoctripper.herokuapp.com/api/trips'
+} else {
+    baseUrl = `http://localhost:3000/api/trips`
+}
 let token
 
 const setToken = (idToken) => {

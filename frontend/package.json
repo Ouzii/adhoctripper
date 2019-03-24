@@ -20,7 +20,7 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start REACT_APP_LOCAL='true'",
     "build": "react-scripts build && rm -rf ../build && cp -r build ../ && rm -rf build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
