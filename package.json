@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js dev",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build"
   },
@@ -20,15 +20,14 @@
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
-    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "heroku-ssl-redirect": "0.0.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.4.8",
-    "react-scripts": "2.1.8"
+    "mongoose": "^5.4.8"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "dotenv": "^7.0.0"
   }
 }
