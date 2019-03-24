@@ -1,17 +1,24 @@
 
 
-const personalTripsReducer = (store = null, action) => {
-    switch(action.type) {
+const personalTripsReducer = (store = JSON.parse(window.localStorage.getItem('personalTrips')), action) => {
+    switch (action.type) {
         case 'SET_PERSONAL_TRIPS':
             return store = action.trips
         case 'UPDATE_PERSONAL_TRIPS':
-            return store.map(trip => { return trip.id === action.trip.id ? action.trip : trip })
+            const updatedTrips = store.map(trip => { return trip.id === action.trip.id ? action.trip : trip })
+            window.localStorage.setItem('personalTrips', JSON.stringify(updatedTrips))
+            return updatedTrips
+        case 'REMOVE_FROM_PERSONAL_TRIPS':
+            const removedFromTrips = store.filter(trip => trip.id !== action.trip.id)
+            window.localStorage.setItem('personalTrips', JSON.stringify(removedFromTrips))
+            return removedFromTrips
         default:
             return store
     }
 }
 
 export const setPersonalTrips = (trips) => {
+    window.localStorage.setItem('personalTrips', JSON.stringify(trips))
     return async (dispatch) => {
         dispatch({
             type: 'SET_PERSONAL_TRIPS',
@@ -24,6 +31,15 @@ export const updatePersonalTrips = (trip) => {
     return async (dispatch) => {
         dispatch({
             type: 'UPDATE_PERSONAL_TRIPS',
+            trip
+        })
+    }
+}
+
+export const removeFromPersonalTrips = (trip) => {
+    return async (dispatch) => {
+        dispatch({
+            type: 'REMOVE_FROM_PERSONAL_TRIPS',
             trip
         })
     }

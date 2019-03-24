@@ -35,7 +35,7 @@ tripRouter.get("/:id", async (request, response) => {
             return response.status(200).send(Trip.format(trip));
         }
         let decoded = jwt.verify(request.headers.token, secret)
-        if (''+trip.user === decoded.id) {
+        if (decoded.id.toString() === trip.user.toString()) {
             return response.status(200).send(Trip.format(trip));
         }
         return response.status(403).send({ error: 'Trip forbidden' });
@@ -84,7 +84,7 @@ tripRouter.put("/:id", async (request, response) => {
     try {
         const decoded = jwt.verify(request.headers.token, secret)
         const trip = await Trip.findById(request.params.id)
-        if ('' + trip.user === decoded.id) {
+        if (decoded.id.toString() === trip.user.toString()) {
             const tripToBeUpdated = {
                 ...request.body,
                 start: JSON.stringify(request.body.start),
@@ -108,8 +108,13 @@ tripRouter.delete("/:id", async (request, response) => {
         if (!tripToBeDeleted) {
             return response.status(404).send({ error: "Trip not found" })
         }
-        await Trip.findOneAndDelete(Trip.findById(request.params.id))
-        response.status(200).send(Trip.format(tripToBeDeleted))
+        const decoded = jwt.verify(request.headers.token, secret)
+        if (decoded.id.toString() === tripToBeDeleted.user.toString()) {
+            await Trip.findOneAndDelete(Trip.findById(request.params.id))
+            return response.status(200).send(Trip.format(tripToBeDeleted))
+        }
+        return response.status(403).send({ error: 'Not authorized to delete trip' })
+
     } catch (error) {
         console.log(error);
         response.status(400).send({ error: "Something went wrong, try again later" })

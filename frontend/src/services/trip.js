@@ -60,7 +60,7 @@ const update = async (updatedTrip, id) => {
 
 const remove = async (id) => {
     const response = await axios.delete(`${baseUrl}/${id}`, config())
-    return response
+    return response.data
 }
 
 export default { getShared, remove, update, setToken, getPersonal, saveOne, getOne, checkIfTokenInLocal}

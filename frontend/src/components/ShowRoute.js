@@ -94,7 +94,7 @@ class ShowRoute extends Component {
             <div>
                 {this.state.trip && this.state.directions && this.state.length && this.state.vehicle ?
                     this.state.directions ?
-                        <div>
+                        <div className="showRoute">
                             {this.state.length ?
                                 <div>
                                     <TripPriceInfo user={this.props.loggedUser} length={this.state.length} />

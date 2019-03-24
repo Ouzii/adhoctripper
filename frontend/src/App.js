@@ -99,7 +99,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   loggedUser: state.loggedUser,
-  sharedTrips: state.sharedTrips
+  sharedTrips: state.sharedTrips,
+  personalTrips: state.personalTrips
 })
 
 export default connect(mapStateToProps,

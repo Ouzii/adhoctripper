@@ -4,12 +4,27 @@ import Spinner from 'react-spinkit'
 import TripList from './TripList'
 
 class TripHistoryPage extends Component {
+    constructor(props) {
+      super(props)
+    
+      this.state = {
+         trips: this.props.personalTrips
+      }
+    }
 
+    async componentWillReceiveProps(nextProps) {
+        if (nextProps.personalTrips !== this.state.trips) {
+            await this.setState({
+                trips: nextProps.personalTrips
+            })
+        }
+    }
+    
   render() {
     return (
       <div>
           <h1>My trips</h1>
-        {this.props.personalTrips ? (this.props.personalTrips.length === 0 ? <h3>No personal trips</h3> : <TripList trips={this.props.personalTrips} personal={true} />) : <Spinner style={{ margin: 'auto'}} name='circle' fadeIn='none' color='white' /> }
+        {this.state.trips ? (this.state.trips.length === 0 ? <h3>No personal trips</h3> : <TripList trips={this.state.trips} personal={true} />) : <Spinner style={{ margin: 'auto'}} name='circle' fadeIn='none' color='white' /> }
       </div>
     )
   }

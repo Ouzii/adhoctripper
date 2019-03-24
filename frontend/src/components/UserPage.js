@@ -93,6 +93,7 @@ class UserPage extends Component {
     render() {
         return (
             <div>
+                <h4>Logged in as {this.props.loggedUser.username}</h4>
                 <form onSubmit={this.changeFuelPrice} style={{ border: 'solid grey', borderWidth: '4px 4px 0px 4px' }}>
                     <br />
                     <label>Estimated fuel price (eur/l)</label><br />

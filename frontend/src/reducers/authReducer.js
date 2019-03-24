@@ -1,6 +1,6 @@
 
 
-const authReducer = (store = null, action) => {
+const authReducer = (store = JSON.parse(window.localStorage.getItem('loggedUser')), action) => {
     switch(action.type) {
         case 'SET_USER':
             return store = action.user

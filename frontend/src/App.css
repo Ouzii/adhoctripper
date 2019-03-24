@@ -169,6 +169,7 @@ ul.navbar-buttons li a {
 
 .navbar a {
     background-image: linear-gradient( grey, black);
+    font-weight: bold;
     /* background-image: radial-gradient(black, whitesmoke); */
 }
 
@@ -429,6 +430,7 @@ input[type=submit] {
     padding: 0px;
     display: inline-block;
     border-radius: 12px;
+    line-height: 10vmax;
 }
 
 .tripListItem {
@@ -436,7 +438,7 @@ input[type=submit] {
     margin: auto;
 }
 
-a {
+.showRoute a {
     width: 50%;
     margin: auto;
     color: #fff;
@@ -447,4 +449,9 @@ a {
     padding: 0px;
     display: inline-block;
     border-radius: 12px;
+}
+
+.tripListItem button {
+    width: 40%;
+    text-align: center;
 }

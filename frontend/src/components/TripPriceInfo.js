@@ -58,7 +58,8 @@ export default class TripPriceInfo extends Component {
                             onChange={this.handleChange}
                             options={this.state.options} />
 
-                        Length of route: {this.state.length / 1000}km<br />
+                        Length of route: {+(this.state.length / 1000).toFixed(2)}km<br />
+                        Est. fuel consumption: {+((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)).toFixed(2)} l<br/>
                         Est. fuel price: {+(((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)) * this.state.estFuelPrice).toFixed(2)}€
 
                     </div>
