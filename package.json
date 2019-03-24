@@ -4,7 +4,8 @@
   "description": "Ad-hoc tripper",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "watch": "nodemon index.js dev",
     "build": "cd frontend && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build"
@@ -24,7 +25,9 @@
     "express-jwt": "^5.3.1",
     "heroku-ssl-redirect": "0.0.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.4.8",
+    "mongoose": "^5.4.8"
+  },
+  "devDependencies": {
     "nodemon": "^1.18.10"
   }
 }
