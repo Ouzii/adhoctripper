@@ -430,12 +430,13 @@ input[type=submit] {
     padding: 0px;
     display: inline-block;
     border-radius: 12px;
-    line-height: 10vmax;
+    line-height: 10vmin;
 }
 
 .tripListItem {
     width: 95%;
     margin: auto;
+    max-width: 500px;
 }
 
 .showRoute a {
@@ -453,6 +454,7 @@ input[type=submit] {
 
 .googleLink a {
     width: 50%;
+    max-width: 400px;
     margin: auto;
     color: #fff;
     background-color: black;

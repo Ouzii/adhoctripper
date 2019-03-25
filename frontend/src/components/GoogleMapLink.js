@@ -21,9 +21,17 @@ export default class GoogleMapLink extends Component {
     }
 
     render() {
+        console.log(this.state.googleLink)
         return (
-            <div className="googleLink">
-                <a href={this.state.googleLink} className="googleLink" title="Google Maps" target="_blank" rel="noopener noreferrer">Open in google</a>
+            <div>
+            {
+                this.state.googleLink !== 'https://www.google.com/maps/dir/' ?
+                    <div className="googleLink">
+                        <a href={this.state.googleLink} title="Google Maps" target="_blank" rel="noopener noreferrer">Open in google</a>
+                    </div>
+                    :
+                    null
+            }
             </div>
         )
     }
