@@ -7,7 +7,6 @@ const tripSchema = new mongoose.Schema({
     end: String,
     startAddress: String,
     endAddress: String,
-    // directions: String,
     markers: String,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     shared: { type: Boolean, default: false }
@@ -23,7 +22,6 @@ tripSchema.statics.format = trip => {
         startAddress: trip.startAddress,
         endAddress: trip.endAddress,
         markers: JSON.parse(trip.markers),
-        // directions: trip.directions,
         user: trip.user,
         shared: trip.shared
     };

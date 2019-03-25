@@ -2,7 +2,8 @@
 const sharedTripsReducer = (store = JSON.parse(window.localStorage.getItem('sharedTrips')), action) => {
     switch (action.type) {
         case 'SET_SHARED_TRIPS':
-            return store = action.trips
+        window.localStorage.setItem('sharedTrips', JSON.stringify(action.trips))
+            return action.trips
         case 'ADD_TO_SHARED_TRIPS':
             store.push(action.trip)
             window.localStorage.setItem('sharedTrips', JSON.stringify(store))
@@ -17,7 +18,6 @@ const sharedTripsReducer = (store = JSON.parse(window.localStorage.getItem('shar
 }
 
 export const setSharedTrips = (trips) => {
-    window.localStorage.setItem('sharedTrips', JSON.stringify(trips))
     return async (dispatch) => {
         dispatch({
             type: 'SET_SHARED_TRIPS',

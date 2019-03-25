@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 const accountSchema = new mongoose.Schema({
   username: String,
+  usernameUppercase: String,
   passwordHash: String,
   email: String,
-  vehicles: {type: String, default: "[]"},
-  estFuelPrice: Number
+  vehicles: { type: String, default: "[]" },
+  estFuelPrice: { type: Number, default: 0 }
 });
 
 accountSchema.statics.format = account => {

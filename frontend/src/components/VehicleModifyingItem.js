@@ -10,6 +10,7 @@ export default class VehicleModifyingItem extends Component {
             consumption: props.vehicle.consumption
         }
         this.saveVehicle = props.saveVehicleModify
+        this.deleteVehicle = props.deleteVehicle
     }
 
     handleChange = (event) => {
@@ -20,10 +21,11 @@ export default class VehicleModifyingItem extends Component {
         return (
             <div style={{ margin: 'auto' }}>
                 <label>Name</label><br/>
-                <input className='inputBar' name='name' value={this.state.name} type='text' onChange={this.handleChange} />
+                <input className='inputBar' name='name' value={this.state.name} type='text' onChange={this.handleChange} /><br/>
                 <label>Consumption (l/100km)</label><br/>
                 <input className='inputBar' name='consumption' value={this.state.consumption} type='number' min="0" step="0.1" onChange={this.handleChange} /><br />
                 <button onClick={() => this.saveVehicle(this.state)}>Save</button><br /><br />
+                <button onClick={() => this.deleteVehicle(this.state)}>Delete</button><br /><br />
             </div>
         )
     }

@@ -14,4 +14,5 @@ PVM | KLO | TUNTIA | TEHTY |
 23.03.2019|12:30-18:00|5,5|Lisätty käyttäjälle arvioitu bensan hinta. Lisätty käyttäjän omien trippien sivun ja parannettu sharedTrips sivua. Lisätty hintatiedot tripin tarkastelunäkymään. Korjattu uloskirjautuminen.|
 24.03.2019|10:30-13:00|2,0|Korjattu sisäänkirjautuminen ja lisätty showRoute-komponenttiin linkki, millä voi siirtyä navigoimaan google mapsiin (puhelimella). Lisätty tripin poisto ja korjattu re-render ongelmat trip listoissa. Pistetty Herokuun.|
 25.03.2019|10:30-12:00|1,5|Aloitettu PWA-ominaisuuksien teko. Generoitu iconit ja muokattu manifest.jsonia. Tehty uudet iconit ja saatu PWA toimimaan.|
-**YHT**||**50,5**|
+25.03.2019|15:30-19:30|4,0|Testattu toimintaa puhelimella ja korjattu virheitä (mm. käyttäjätunnuksen voi nyt antaa merkkikoosta riippumatta ja uusi trippi lisätään käyttäjän listaan ilman päivitystä). Lisätty uuden tripin tekosivulle linkki google mapsiin ja implementoitu ajoneuvon poistaminen.|
+**YHT**||**54,5**|

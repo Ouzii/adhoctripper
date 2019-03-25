@@ -4,6 +4,7 @@ import { withGoogleMap, GoogleMap } from 'react-google-maps';
 import Mark from './Mark'
 import RouteMapping from './RouteMapping';
 import LocationInfo from './LocationInfo'
+import GoogleMapLink from './GoogleMapLink'
 
 
 class Map extends React.Component {
@@ -18,6 +19,7 @@ class Map extends React.Component {
         this.markItem = React.createRef()
         this.directionsItem = React.createRef()
         this.panelItem = React.createRef()
+        this.googleLinkItem = React.createRef()
         this.directionService = new google.maps.DirectionsService()
         this.markers = []
         this.directions = {routes: []}
@@ -54,6 +56,8 @@ class Map extends React.Component {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directions = { ...result }
                 this.directionsItem.current.setState({ directions: this.directions, panel: this.panelItem })
+                this.markItem.current.setState({ markers: [] })
+                this.googleLinkItem.current.updateLink({origin, destination, result})
             } else {
                 console.error(`error fetching directions ${result}`);
             }
@@ -61,7 +65,7 @@ class Map extends React.Component {
     }
 
     getMarkers(markers) {
-        this.markers = markers
+        this.markers = this.markers.concat(markers)
     }
 
     resetAll() {
@@ -75,14 +79,10 @@ class Map extends React.Component {
     }
 
     addMarkerByAddress(marker) {
-        const markers = this.markItem.current.state.markers
+        const markers = this.markItem.current.state.markers.slice()
         markers.push(marker)
-        this.markItem.current.setState(markers)
-        this.getMarkers(markers)
-    }
-
-    updatePanel() {
-
+        this.markItem.current.setState({markers: markers})
+        this.getMarkers(marker)
     }
 
     render() {
@@ -91,10 +91,11 @@ class Map extends React.Component {
                 defaultCenter={props.position}
                 defaultZoom={10}
                 onClick={(event) => {
-                    const markers = this.markItem.current.state.markers
-                    markers.push({ lat: event.latLng.lat(), lng: event.latLng.lng() })
-                    this.markItem.current.setState(markers)
-                    props.giveMarkers(markers)
+                    const markers = this.markItem.current.state.markers.slice()
+                    const newMarker = { lat: event.latLng.lat(), lng: event.latLng.lng() }
+                    markers.push(newMarker)
+                    this.markItem.current.setState({markers: markers})
+                    props.giveMarkers(newMarker)
                 }}
             >
                 {this.directions && props.routeMapper}
@@ -112,12 +113,12 @@ class Map extends React.Component {
         return (
             <div>
                 <LocationInfo addMarker={this.addMarkerByAddress.bind(this)} /><br/>
-                <button onClick={() => {
+                <button onClick={async () => {
                     if (!currentAdded()) {
-                        const markers = this.markItem.current.state.markers
+                        const markers = this.markItem.current.state.markers.slice()
                         markers.push(this.state.position)
-                        this.markItem.current.setState(markers)
-                        this.getMarkers(markers)
+                        await this.markItem.current.setState({markers: markers})
+                        this.getMarkers(this.state.position)
                     }
                 }}>Add current location</button><br/><br/>
                 <p>...or click the map to add waypoints</p>
@@ -131,6 +132,7 @@ class Map extends React.Component {
                 /><br/>
                 <button onClick={() => this.getRoute()}>Generate route via waypoints</button><br/><br/>
                 <div id="directions-panel" style={{width: window.innerWidth * 0.8}} ref={this.panelItem}/><br/>
+                <GoogleMapLink ref={this.googleLinkItem}/><br/><br/>
                 <button onClick={() => this.resetAll()}>RESET ALL</button><br/><br/>
             </div>
         )

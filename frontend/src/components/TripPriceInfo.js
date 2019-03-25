@@ -59,9 +59,16 @@ export default class TripPriceInfo extends Component {
                             options={this.state.options} />
 
                         Length of route: {+(this.state.length / 1000).toFixed(2)}km<br />
+                        {this.state.vehicles.length > 0 ?
+                        <div>
                         Est. fuel consumption: {+((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)).toFixed(2)} l<br/>
                         Est. fuel price: {+(((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)) * this.state.estFuelPrice).toFixed(2)}€
-
+                            </div>
+                            :
+                            <div>
+                                Add vehicles for trip fuel info
+                            </div>
+                        }
                     </div>
                     :
                     <div />}

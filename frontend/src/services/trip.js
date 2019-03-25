@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 let baseUrl = 'http://localhost:3000/api/trips'
-if (process.env.REACT_APP_LOCAL !== 'true') {
+if (process.env.NODE_ENV !== 'development') {
     baseUrl = 'https://adhoctripper.herokuapp.com/api/trips'
 } else {
     baseUrl = `http://localhost:3000/api/trips`

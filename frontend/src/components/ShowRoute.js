@@ -6,6 +6,8 @@ import { withGoogleMap, GoogleMap } from 'react-google-maps'
 import Mark from './Mark'
 import RouteMapping from './RouteMapping'
 import TripPriceInfo from './TripPriceInfo'
+import Spinner from 'react-spinkit'
+import GoogleMapLink from './GoogleMapLink';
 
 class ShowRoute extends Component {
     constructor(props) {
@@ -23,17 +25,18 @@ class ShowRoute extends Component {
         this.directionsService = new google.maps.DirectionsService()
         this.panelItem = React.createRef()
         this.directionsItem = React.createRef()
+        this.googleLinkItem = React.createRef()
     }
 
     async componentDidMount() {
         try {
             if (this.state.id !== '0') {
                 const trip = await tripService.getOne(this.state.id)
-                let googleLink = this.state.googleLink+`${trip.start.lat},${trip.start.lng}/`
+                let googleLink = this.state.googleLink + `${trip.start.lat},${trip.start.lng}/`
                 trip.markers.forEach(marker => {
-                    googleLink = googleLink+`${marker.lat},${marker.lng}/`
+                    googleLink = googleLink + `${marker.lat},${marker.lng}/`
                 })
-                googleLink = googleLink+`${trip.end.lat},${trip.end.lng}`
+                googleLink = googleLink + `${trip.end.lat},${trip.end.lng}`
                 await this.setState({
                     trip: trip,
                     vehicle: this.props.loggedUser ? this.props.loggedUser.vehicles[0] : null,
@@ -45,10 +48,6 @@ class ShowRoute extends Component {
         } catch (error) {
             console.log(error)
         }
-
-    }
-
-    async componentWillReceiveProps() {
 
     }
 
@@ -73,6 +72,7 @@ class ShowRoute extends Component {
                     length: length.reduce((total, current) => { return total + current })
                 })
                 this.directionsItem.current.setState({ directions: result, panel: this.panelItem })
+                this.googleLinkItem.current.updateLink({ origin: { location: this.state.trip.start }, destination: { location: this.state.trip.end }, result })
             } else {
                 console.error(`error fetching directions ${result}`);
             }
@@ -92,16 +92,17 @@ class ShowRoute extends Component {
         ));
         return (
             <div>
-                {this.state.trip && this.state.directions && this.state.length && this.state.vehicle ?
-                    this.state.directions ?
-                        <div className="showRoute">
-                            {this.state.length ?
-                                <div>
-                                    <TripPriceInfo user={this.props.loggedUser} length={this.state.length} />
-                                </div>
-                                :
-                                <div />}
-                            <br />
+                <div className="showRoute">
+                    <h1>{this.state.trip ? this.state.trip.name : 'Loading..'}</h1>
+                    {this.state.length ?
+                        <div>
+                            <TripPriceInfo user={this.props.loggedUser} length={this.state.length} />
+                        </div>
+                        :
+                        <div />}
+                    <br />
+                    {this.state.trip ?
+                        <div>
                             <MapWithMarker
                                 containerElement={<div style={{ width: window.innerWidth * 0.8, height: window.innerWidth * 0.9, maxHeight: '400px', maxWidth: '400px', margin: 'auto' }} />}
                                 mapElement={<div style={{ height: `100%`, position: 'relative' }} />}
@@ -109,14 +110,13 @@ class ShowRoute extends Component {
                                 marker={<Mark markers={this.state.trip.markers} />}
                                 routeMapper={<RouteMapping directions={this.state.directions} ref={this.directionsItem} panel={this.panelItem} />}
                             /><br />
-                            <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} /><br/>
-                            <a href={this.state.googleLink} title="Google Maps" target="_blank" rel="noopener noreferrer">Open in google</a>
+                            <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} /><br />
+                            <GoogleMapLink ref={this.googleLinkItem} /><br/>
                         </div>
                         :
-                        <div />
-                    :
-                    <div />
-                }
+                        <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
+                    }
+                </div>
             </div>
         )
     }

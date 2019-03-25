@@ -14,7 +14,9 @@ class UserPage extends Component {
         this.state = {
             modifyVehicles: false,
             vehicles: this.props.loggedUser.vehicles,
-            estFuelPrice: this.props.loggedUser.estFuelPrice ? this.props.loggedUser.estFuelPrice : 0
+            estFuelPrice: this.props.loggedUser.estFuelPrice ? this.props.loggedUser.estFuelPrice : 0,
+            vehicleName: '',
+            vehicleConsumption: ''
         }
     }
 
@@ -46,7 +48,7 @@ class UserPage extends Component {
             const updatedUser = await authService.updateVehicles(newUser, newUser.id)
             this.props.setLoggedUser(updatedUser)
             this.props.notify("Vehicle added", 3000)
-            this.setState({ vehicleName: '', vehicleConsumption: '' })
+            this.setState({ vehicleName: '', vehicleConsumption: '', vehicles: updatedUser.vehicles })
         } catch (error) {
             this.props.notify(error.response.data.error, 3000)
         }
@@ -58,10 +60,9 @@ class UserPage extends Component {
 
     handleModifySave = async (vehicle) => {
         try {
-            let newUser = this.props.loggedUser
-            const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
+            const newVehiclesList = this.props.loggedUser.vehicles.slice()
             newVehiclesList[vehicle.id] = { name: vehicle.name, consumption: vehicle.consumption }
-            newUser = { ...newUser, vehicles: newVehiclesList }
+            const newUser = { ...this.props.loggedUser, vehicles: newVehiclesList }
             const updatedUser = await authService.updateVehicles(newUser, newUser.id)
 
             this.props.setLoggedUser(updatedUser)
@@ -74,6 +75,26 @@ class UserPage extends Component {
             this.props.notify(error.response.data.error, 3000)
         }
 
+    }
+
+    deleteVehicle = async (vehicle) => {
+        try {
+            if (window.confirm(`You sure you want to delete ${vehicle.name}?`)) {
+                const newVehiclesList = this.props.loggedUser.vehicles.slice()
+                newVehiclesList.splice(vehicle.id, 1)
+                const newUser = { ...this.props.loggedUser, vehicles: newVehiclesList }
+                const updatedUser = await authService.updateVehicles(newUser, newUser.id)
+
+                this.props.setLoggedUser(updatedUser)
+                this.setState({
+                    vehicles: newVehiclesList
+                })
+                this.props.notify(`${vehicle.name} deleted`, 3000)
+            }
+        } catch (error) {
+            console.log(error)
+            this.props.notify(error.response.data.error, 3000)
+        }
     }
 
     changeFuelPrice = async (event) => {
@@ -105,7 +126,7 @@ class UserPage extends Component {
                     <p>You have {this.props.loggedUser.vehicles.length} vehicles</p>
                     {this.state.modifyVehicles ?
                         <div>
-                            {this.state.vehicles.map(vehicle => <VehicleModifyingItem id={this.state.vehicles.indexOf(vehicle)} vehicle={vehicle} saveVehicleModify={this.handleModifySave.bind(this)} key={`${vehicle.name}+${vehicle.consumption}+${Math.random(100)}`} />)}
+                            {this.state.vehicles.map(vehicle => <VehicleModifyingItem id={this.state.vehicles.indexOf(vehicle)} vehicle={vehicle} saveVehicleModify={this.handleModifySave.bind(this)} deleteVehicle={this.deleteVehicle.bind(this)} key={`${vehicle.name}+${vehicle.consumption}+${Math.random(100)}`} />)}
                         </div>
                         :
                         <div>
@@ -125,6 +146,7 @@ class UserPage extends Component {
                     <button onClick={() => this.deleteAccount()}>Delete account</button><br />
                     <br />
                 </div>
+                <br />
             </div>
         )
     }

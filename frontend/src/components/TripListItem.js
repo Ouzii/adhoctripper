@@ -15,8 +15,6 @@ class TripListItem extends Component {
             extended: false,
             personal: props.personal
         }
-
-        this.updateList = props.updateList
     }
 
     toggleExtended() {

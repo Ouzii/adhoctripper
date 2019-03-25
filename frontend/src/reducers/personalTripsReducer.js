@@ -3,7 +3,8 @@
 const personalTripsReducer = (store = JSON.parse(window.localStorage.getItem('personalTrips')), action) => {
     switch (action.type) {
         case 'SET_PERSONAL_TRIPS':
-            return store = action.trips
+            window.localStorage.setItem('personalTrips', JSON.stringify(action.trips))
+            return action.trips
         case 'UPDATE_PERSONAL_TRIPS':
             const updatedTrips = store.map(trip => { return trip.id === action.trip.id ? action.trip : trip })
             window.localStorage.setItem('personalTrips', JSON.stringify(updatedTrips))
@@ -18,7 +19,6 @@ const personalTripsReducer = (store = JSON.parse(window.localStorage.getItem('pe
 }
 
 export const setPersonalTrips = (trips) => {
-    window.localStorage.setItem('personalTrips', JSON.stringify(trips))
     return async (dispatch) => {
         dispatch({
             type: 'SET_PERSONAL_TRIPS',

@@ -52,9 +52,7 @@ tripRouter.post("/", async (request, response) => {
             return response.status(400).json({ error: "Content missing" });
         }
 
-        if (body.start === '' || body.start === undefined || body.end === undefined || body.end === ''
-            // || JSON.parse(body.directions).routes.length === 0
-        ) {
+        if (body.start === '' || body.start === undefined || body.end === undefined || body.end === '') {
             return response.status(400).json({ error: "Trip needs a route!" })
         }
         if (!body.user) {
@@ -67,7 +65,6 @@ tripRouter.post("/", async (request, response) => {
             end: body.end,
             startAddress: body.startAddress,
             endAddress: body.endAddress,
-            // directions: body.directions,
             markers: body.markers,
             user: body.user
         });

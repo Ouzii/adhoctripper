@@ -12,24 +12,31 @@ class TripList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.personalTrips !== this.state.trips) {
-      if (nextProps.personal) {
-        this.setState({
-          trips: nextProps.personalTrips
-        })
-      } else {
-        this.setState({
-          trips: nextProps.sharedTrips
-        })
-      }
-      
+    if (this.state.personal && nextProps.personalTrips !== this.state.trips) {
+      this.setState({
+        trips: nextProps.personalTrips
+      })
     }
+
+    if (!this.state.personal && nextProps.sharedTrips !== this.state.trips) {
+      this.setState({
+        trips: nextProps.sharedTrips
+      })
+    }
+
   }
+
 
   render() {
     return (
       <div>
-        {this.state.trips.map(trip => <TripListItem trip={trip} personal={this.state.personal} key={trip.id} />)}
+        {this.state.trips ?
+          <div>
+            {this.state.trips.map(trip => <TripListItem trip={trip} personal={this.state.personal} key={trip.id} />)}
+          </div>
+          :
+          <div />
+        }
       </div>
     )
   }

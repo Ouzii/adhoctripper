@@ -24,7 +24,8 @@ authRouter.post("/login", async (request, response) => {
     if (body.username.length === 0 || body.password.length === 0) {
       return response.status(403).send({ error: "Invalid username or password" })
     }
-    const account = await Account.findOne({ username: body.username })
+    const account = await Account.findOne({ usernameUppercase: body.username.toUpperCase() })
+    console.log(account)
     if (!account) {
       return response.status(403).send({ error: "Invalid username or password" })
     }
@@ -55,6 +56,11 @@ authRouter.post("/register", async (request, response) => {
     if (body.username.length < 5 || body.email.indexOf("@") === -1 || body.password.length < 8) {
       return response.status(400).json({ error: "Invalid credentials" })
     }
+    const isTaken = await Account.findOne({ usernameUppercase: body.username.toUpperCase() })
+    
+    if (isTaken) {
+      return response.status(400).json({ error: "Username already exists" })
+    }
     bcrypt.hash(body.password, 10, async (err, hash) => {
       if (err) {
         console.log(err)
@@ -62,6 +68,7 @@ authRouter.post("/register", async (request, response) => {
       }
       const account = new Account({
         username: body.username,
+        usernameUppercase: body.username.toUpperCase(),
         passwordHash: hash,
         email: body.email
       });
