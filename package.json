@@ -7,8 +7,7 @@
     "start": "node index.js",
     "watch": "set NODE_ENV=dev&& nodemon index.js",
     "build": "cd frontend && npm install && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
