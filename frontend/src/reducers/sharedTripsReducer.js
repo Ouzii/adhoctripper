@@ -2,16 +2,44 @@
 const sharedTripsReducer = (store = JSON.parse(window.localStorage.getItem('sharedTrips')), action) => {
     switch (action.type) {
         case 'SET_SHARED_TRIPS':
-        window.localStorage.setItem('sharedTrips', JSON.stringify(action.trips))
-            return action.trips
+        const sharedTrips = action.trips.sort((a, b) => {
+            if (new Date(a.saved) > new Date(b.saved)) {
+              return -1
+            } else if (new Date(a.saved) < new Date(b.saved)) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        window.localStorage.setItem('sharedTrips', JSON.stringify(sharedTrips))
+            return sharedTrips
         case 'ADD_TO_SHARED_TRIPS':
-            store.push(action.trip)
-            window.localStorage.setItem('sharedTrips', JSON.stringify(store))
-            return store
+            const newSharedTrips = store.slice()
+            newSharedTrips.push(action.trip)
+            const sortedNewSharedTrips = newSharedTrips.sort((a, b) => {
+                if (new Date(a.saved) > new Date(b.saved)) {
+                  return -1
+                } else if (new Date(a.saved) < new Date(b.saved)) {
+                  return 1
+                } else {
+                  return 0
+                }
+              })
+            window.localStorage.setItem('sharedTrips', JSON.stringify(sortedNewSharedTrips))
+            return sortedNewSharedTrips
         case 'REMOVE_FROM_SHARED_TRIPS':
             const newStore = store.filter(trip => trip.id !== action.trip.id)
-            window.localStorage.setItem('sharedTrips', JSON.stringify(newStore))
-            return newStore
+            const sortedNewStore = newStore.sort((a, b) => {
+                if (new Date(a.saved) > new Date(b.saved)) {
+                  return -1
+                } else if (new Date(a.saved) < new Date(b.saved)) {
+                  return 1
+                } else {
+                  return 0
+                }
+              })
+            window.localStorage.setItem('sharedTrips', JSON.stringify(sortedNewStore))
+            return sortedNewStore
         default:
             return store
     }

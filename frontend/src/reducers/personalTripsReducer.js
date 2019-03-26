@@ -3,16 +3,43 @@
 const personalTripsReducer = (store = JSON.parse(window.localStorage.getItem('personalTrips')), action) => {
     switch (action.type) {
         case 'SET_PERSONAL_TRIPS':
-            window.localStorage.setItem('personalTrips', JSON.stringify(action.trips))
-            return action.trips
+            const personalTrips = action.trips.sort((a, b) => {
+                if (new Date(a.saved) > new Date(b.saved)) {
+                  return -1
+                } else if (new Date(a.saved) < new Date(b.saved)) {
+                  return 1
+                } else {
+                  return 0
+                }
+              })
+            window.localStorage.setItem('personalTrips', JSON.stringify(personalTrips))
+            return personalTrips
         case 'UPDATE_PERSONAL_TRIPS':
             const updatedTrips = store.map(trip => { return trip.id === action.trip.id ? action.trip : trip })
-            window.localStorage.setItem('personalTrips', JSON.stringify(updatedTrips))
-            return updatedTrips
+            const sortedUpdatedTrips = updatedTrips.sort((a, b) => {
+                if (new Date(a.saved) > new Date(b.saved)) {
+                  return -1
+                } else if (new Date(a.saved) < new Date(b.saved)) {
+                  return 1
+                } else {
+                  return 0
+                }
+              })
+            window.localStorage.setItem('personalTrips', JSON.stringify(sortedUpdatedTrips))
+            return sortedUpdatedTrips
         case 'REMOVE_FROM_PERSONAL_TRIPS':
             const removedFromTrips = store.filter(trip => trip.id !== action.trip.id)
-            window.localStorage.setItem('personalTrips', JSON.stringify(removedFromTrips))
-            return removedFromTrips
+            const sortedRemovedFromTrips = removedFromTrips.sort((a, b) => {
+                if (new Date(a.saved) > new Date(b.saved)) {
+                  return -1
+                } else if (new Date(a.saved) < new Date(b.saved)) {
+                  return 1
+                } else {
+                  return 0
+                }
+              })
+            window.localStorage.setItem('personalTrips', JSON.stringify(sortedRemovedFromTrips))
+            return sortedRemovedFromTrips
         default:
             return store
     }
