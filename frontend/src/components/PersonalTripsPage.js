@@ -3,12 +3,15 @@ import { connect } from 'react-redux'
 import Spinner from 'react-spinkit'
 import TripList from './TripList'
 
-class TripHistoryPage extends Component {
+class PersonalTripsPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            trips: this.props.personalTrips
+            trips: this.props.personalTrips.sort((a, b) => {
+                return a.saved > b.saved
+            }),
+            filter: ''
         }
     }
 
@@ -19,6 +22,8 @@ class TripHistoryPage extends Component {
             })
         }
     }
+
+
 
     render() {
         return (
@@ -35,4 +40,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, null)(TripHistoryPage)
+export default connect(mapStateToProps, null)(PersonalTripsPage)

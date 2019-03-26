@@ -21,7 +21,6 @@ export default class GoogleMapLink extends Component {
     }
 
     render() {
-        console.log(this.state.googleLink)
         return (
             <div>
             {

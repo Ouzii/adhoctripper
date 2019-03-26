@@ -7,7 +7,8 @@ class TripList extends Component {
     super(props)
     this.state = {
       trips: props.trips,
-      personal: props.personal
+      personal: props.personal,
+      filter: ''
     }
   }
 
@@ -26,13 +27,39 @@ class TripList extends Component {
 
   }
 
+  handleChange = async (event) => {
+    await this.setState({
+      [event.target.name]: event.target.value.toLowerCase()
+    })
+  }
+
 
   render() {
+    const tripsToShow = () => {
+      if (this.state.personal) {
+        return this.props.personalTrips.filter(trip => {
+          return (trip.name.toLowerCase().includes(this.state.filter) ||
+            trip.description.toLowerCase().includes(this.state.filter) ||
+            trip.startAddress.toLowerCase().includes(this.state.filter) ||
+            trip.endAddress.toLowerCase().includes(this.state.filter)
+          )
+        })
+      } else {
+        return this.props.sharedTrips.filter(trip => {
+          return (trip.name.toLowerCase().includes(this.state.filter) ||
+            trip.description.toLowerCase().includes(this.state.filter) ||
+            trip.startAddress.toLowerCase().includes(this.state.filter) ||
+            trip.endAddress.toLowerCase().includes(this.state.filter)
+          )
+        })
+      }
+    }
     return (
       <div>
+        <input type='search' className='inputBar' value={this.state.filter} onChange={this.handleChange} name='filter' placeholder='Filter trips..' /><br /><br />
         {this.state.trips ?
           <div>
-            {this.state.trips.map(trip => <TripListItem trip={trip} personal={this.state.personal} key={trip.id} />)}
+            {tripsToShow().map(trip => <TripListItem trip={trip} personal={this.state.personal} key={trip.id} />)}
           </div>
           :
           <div />

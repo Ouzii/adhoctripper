@@ -85,7 +85,7 @@ class NewTripPage extends Component {
             const personalTrips = this.props.personalTrips.slice()
             personalTrips.push(savedTrip)
             this.props.setPersonalTrips(personalTrips)
-            this.props.history.push("/personal")
+            this.props.history.push(`/trip/${savedTrip.id}`)
             this.props.notify("Trip saved", 3000)
             
         } catch (error) {

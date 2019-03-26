@@ -14,9 +14,9 @@ class Header extends Component {
                      :
                      <NavLink to="/login" className="right">Login/Register</NavLink>}
                     <ul className="navbar-buttons">
-                        <li><NavLink to="/personal">My trips</NavLink></li>
+                        <li><NavLink exact to="/personal">My trips</NavLink></li>
                         <li><NavLink exact to="/">Browse</NavLink></li>
-                        <li><NavLink to="/new">New trip</NavLink></li>
+                        <li><NavLink exact to="/new">New trip</NavLink></li>
                     </ul>
                 </div>
             </div>

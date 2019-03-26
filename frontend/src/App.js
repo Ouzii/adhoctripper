@@ -16,7 +16,7 @@ import authService from './services/auth'
 import BrowsingPage from './components/BrowsingPage';
 import tripService from './services/trip';
 import ShowRoute from './components/ShowRoute';
-import TripHistoryPage from './components/TripHistoryPage';
+import PersonalTripsPage from './components/PersonalTripsPage';
 
 class App extends Component {
   constructor(props) {
@@ -66,7 +66,7 @@ class App extends Component {
         <div className="Container">
           {this.props.loggedUser ?
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
-              <Route path="/personal" component={TripHistoryPage} />
+              <Route path="/personal" component={PersonalTripsPage} />
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
               <Route path="/userpage" component={UserPage} />
@@ -77,7 +77,7 @@ class App extends Component {
             
             :
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
-              <Route path="/personal" component={TripHistoryPage} />
+              <Route path="/personal" component={PersonalTripsPage} />
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
               <Route path="/login" component={LoginPage} />
