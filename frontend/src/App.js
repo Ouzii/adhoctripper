@@ -18,6 +18,7 @@ import tripService from './services/trip';
 import ShowRoute from './components/ShowRoute';
 import PersonalTripsPage from './components/PersonalTripsPage';
 import accountService from './services/account'
+import ModifyAccountInfo from './components/ModifyAccountInfo';
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class App extends Component {
     // window.addEventListener('resize', () => this.setState(this.state))
     const token = JSON.parse(window.localStorage.getItem('id_token'))
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-    if(token && !authService.isTokenExpired(token) && user) {
+    if (token && !authService.isTokenExpired(token) && user) {
       await this.props.setLoggedUser(user)
       await authService.setToken(token)
       await tripService.setToken(token)
@@ -44,7 +45,7 @@ class App extends Component {
     }
     const sharedTrips = await tripService.getShared()
     await this.props.setSharedTrips(sharedTrips)
-    
+
     const personalTrips = await tripService.getPersonal()
     await this.props.setPersonalTrips(personalTrips)
   }
@@ -72,11 +73,14 @@ class App extends Component {
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
               <Route path="/userpage" component={UserPage} />
-              <Route path="/trip/:id" defaultParams={{id: '0'}} render={({ match }) => (
-              <ShowRoute key={match.params.id} id={match.params.id}/>
-            )} />
+              <Route path="/trip/:id" defaultParams={{ id: '0' }} render={({ match }) => (
+                <ShowRoute key={match.params.id} id={match.params.id} />
+              )} />
+              <Route path="/userpage/:id/modify" defaultParams={{ id: '1' }} render={({ match }) => (
+                <ModifyAccountInfo key={match.params.id}/>
+              )} />
             </SwipeableRoutes>
-            
+
             :
             <SwipeableRoutes innerRef={el => (this.el = el)} onChangeIndex={this.scrollToTop} containerStyle={{ height: window.innerHeight * 0.7, maxHeight: '600px' }}>
               <Route path="/personal" component={PersonalTripsPage} />
@@ -84,15 +88,15 @@ class App extends Component {
               <Route path="/new" component={NewTripPage} />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisteringPage} />
-              <Route path="/trip/:id" defaultParams={{id: '0'}} render={({ match }) => (
-              <ShowRoute key={match.params.id} id={match.params.id}/>
-            )} />
+              <Route path="/trip/:id" defaultParams={{ id: '0' }} render={({ match }) => (
+                <ShowRoute key={match.params.id} id={match.params.id} />
+              )} />
             </SwipeableRoutes>
           }
-          
+
           <Notification />
         </div>
-        
+
 
       </div>
     );

@@ -16,4 +16,5 @@ PVM | KLO | TUNTIA | TEHTY |
 25.03.2019|10:30-12:00|1,5|Aloitettu PWA-ominaisuuksien teko. Generoitu iconit ja muokattu manifest.jsonia. Tehty uudet iconit ja saatu PWA toimimaan.|
 25.03.2019|15:30-20:00|4,5|Testattu toimintaa puhelimella ja korjattu virheitä (mm. käyttäjätunnuksen voi nyt antaa merkkikoosta riippumatta ja uusi trippi lisätään käyttäjän listaan ilman päivitystä). Lisätty uuden tripin tekosivulle linkki google mapsiin ja implementoitu ajoneuvon poistaminen. Korjattu google linkki näkymään vain, jos on reitti suunniteltu|
 26.03.2019|12:00-14:30|2,5|Refaktoroitu koodia ja muutettu uuden tripin tallentamisen jälkeinen rerouting. Lisätty tripeille tallennusaika ja järjestäminen sivuille. Lisätty filtteröinti ja asetettu aika näkyviin tripeille.|
-**YHT**||**57,5**|
+26.03.2019|17:45-19:15|1,5|Implementoitu salasanan ja sähköpostiosoitteen vaihtaminen.|
+**YHT**||**59,0**|

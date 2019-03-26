@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { setLoggedUser } from '../reducers/authReducer'
 import { setPersonalTrips } from '../reducers/personalTripsReducer'
 import { notify } from '../reducers/notificationReducer'
-import { withRouter } from 'react-router-dom'
+import { withRouter, NavLink } from 'react-router-dom'
 import authService from '../services/auth'
 import accountService from '../services/account'
 import VehicleModifyingItem from './VehicleModifyingItem';
@@ -114,7 +114,7 @@ class UserPage extends Component {
 
     render() {
         return (
-            <div>
+            <div className='userpage'>
                 <h4>Logged in as {this.props.loggedUser.username}</h4>
                 <form onSubmit={this.changeFuelPrice} style={{ border: 'solid grey', borderWidth: '4px 4px 0px 4px' }}>
                     <br />
@@ -144,6 +144,7 @@ class UserPage extends Component {
                 <div style={{ border: 'solid grey', borderWidth: '0px 4px 4px 4px' }}>
                     <br />
                     <button onClick={() => this.logout()}>Logout</button><br /><br />
+                    <NavLink to={`/userpage/${this.props.loggedUser.id}/modify`} >Modify account information</NavLink><br /><br />
                     <button onClick={() => this.deleteAccount()}>Delete account</button><br />
                     <br />
                 </div>

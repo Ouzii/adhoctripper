@@ -44,7 +44,16 @@ const login = async (user) => {
 
 const remove = async () => {
     const response = await axios.delete(baseUrl, config())
-    return response
+    return response.data
 }
 
-export default { remove, setToken, register, login, isTokenExpired }
+const changePassword = async (newPasswords) => {
+    const response = await axios.put(`${baseUrl}/password`, newPasswords, config())
+    return response.data
+}
+const changeEmail = async (newEmail) => {
+    const response = await axios.put(`${baseUrl}/email`, { newEmail: newEmail }, config())
+    return response.data
+}
+
+export default { remove, setToken, register, login, isTokenExpired, changeEmail, changePassword }
