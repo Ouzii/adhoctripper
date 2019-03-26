@@ -68,7 +68,16 @@ class TripListItem extends Component {
                             <h4>To {this.state.trip.endAddress}</h4>
                             <h4>via {this.state.trip.markers.length} {this.state.trip.markers.length === 1 ? 'waypoint' : 'waypoints'}</h4>
                             <p>{this.state.trip.description}</p>
-                            <NavLink to={`/trip/${this.state.trip.id}`} >Show</NavLink><br /><br />
+                            <NavLink to={`/trip/${this.state.trip.id}`} >Show</NavLink><br />
+                            <p>Saved {new Intl.DateTimeFormat('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit'
+
+                                    }).format(new Date(this.state.trip.saved))}</p>
                         </div>
                         {this.state.personal ?
                             <div>

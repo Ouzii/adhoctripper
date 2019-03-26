@@ -82,10 +82,10 @@ class NewTripPage extends Component {
             const savedTrip = await tripService.saveOne(newTrip)
             this.mapItem.current.resetAll()
             this.tripInfoItem.current.setState({ name: '', description: '' })
+            this.props.history.push('/personal')
             const personalTrips = this.props.personalTrips.slice()
             personalTrips.push(savedTrip)
             this.props.setPersonalTrips(personalTrips)
-            this.props.history.push(`/trip/${savedTrip.id}`)
             this.props.notify("Trip saved", 3000)
             
         } catch (error) {

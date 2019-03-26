@@ -8,6 +8,7 @@ import { setPersonalTrips } from '../reducers/personalTripsReducer'
 import { notify } from '../reducers/notificationReducer'
 import authService from '../services/auth'
 import tripService from '../services/trip'
+import accountService from '../services/account';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -18,6 +19,8 @@ class LoginPage extends Component {
             loading: false,
             error: null
         }
+
+        this.timeout = null
     }
 
     handleChange = (event) => {
@@ -27,6 +30,14 @@ class LoginPage extends Component {
     changeLoading = () => {
         this.setState({ loading: !this.state.loading })
     }
+
+    componentWillUnmount() {
+        if (this.timeout) {
+            clearTimeout(this.timeout)
+            this.timeout = null
+        }
+    }
+
     handleSubmit = async (event) => {
         event.preventDefault()
         this.changeLoading()
@@ -37,19 +48,19 @@ class LoginPage extends Component {
                 this.props.notify(`Logged in as ${response.user.username}`, 3000)
                 authService.setToken(response.token)
                 tripService.setToken(response.token)
+                accountService.setToken(response.token)
                 this.props.history.push('/')
                 const personalTrips = await tripService.getPersonal()
                 this.props.setPersonalTrips(personalTrips)
                 const sharedTrips = await tripService.getShared()
                 this.props.setSharedTrips(sharedTrips)
-
             }
         } catch (error) {
             console.log(error)
             this.setState({ loading: false, error: error.response.data.error, password: '' })
-            setTimeout(() => {
+            this.timeout = setTimeout(() => (
                 this.setState({error: null})
-            }, 3000)
+            ).bind(this), 3000)
         }
     }
 

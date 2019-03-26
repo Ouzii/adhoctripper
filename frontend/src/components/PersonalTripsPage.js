@@ -8,9 +8,7 @@ class PersonalTripsPage extends Component {
         super(props)
 
         this.state = {
-            trips: this.props.personalTrips.sort((a, b) => {
-                return a.saved > b.saved
-            }),
+            trips: this.props.personalTrips,
             filter: ''
         }
     }

@@ -6,7 +6,15 @@ class TripList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      trips: props.trips,
+      trips: props.trips.sort((a, b) => {
+        if (new Date(a.saved) > new Date(b.saved)) {
+          return -1
+        } else if (new Date(a.saved) < new Date(b.saved)) {
+          return 1
+        } else {
+          return 0
+        }
+      }),
       personal: props.personal,
       filter: ''
     }
@@ -15,13 +23,23 @@ class TripList extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.state.personal && nextProps.personalTrips !== this.state.trips) {
       this.setState({
-        trips: nextProps.personalTrips
+        trips: nextProps.personalTrips.sort((a, b) => {
+          if (new Date(a.saved) > new Date(b.saved)) {
+            return -1
+          } else if (new Date(a.saved) < new Date(b.saved)) {
+            return 1
+          } else {
+            return 0
+          }
+        })
       })
     }
 
     if (!this.state.personal && nextProps.sharedTrips !== this.state.trips) {
       this.setState({
-        trips: nextProps.sharedTrips
+        trips: nextProps.sharedTrips.sort((a, b) => {
+          return a.saved > b.saved
+        })
       })
     }
 

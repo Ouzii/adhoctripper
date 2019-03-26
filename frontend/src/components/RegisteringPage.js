@@ -6,6 +6,7 @@ import authService from '../services/auth'
 import tripService from '../services/trip'
 import { setLoggedUser } from '../reducers/authReducer'
 import { notify } from '../reducers/notificationReducer'
+import accountService from '../services/account';
 
 class RegisteringPage extends Component {
     constructor(props) {
@@ -42,6 +43,7 @@ class RegisteringPage extends Component {
                 this.props.setLoggedUser(response.user)
                 authService.setToken(response.token)
                 tripService.setToken(response.token)
+                accountService.setToken(response.token)
                 this.props.history.push('/')
                 this.props.notify(`Registered and logged in as ${response.user.username}`, 3000)
             }
