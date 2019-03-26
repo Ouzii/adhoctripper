@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const tripRouter = require("./controllers/trip");
 const authRouter = require("./controllers/authentication");
+const accountRouter = require("./controllers/account")
 
 
 mongoose
@@ -32,6 +33,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static("build"));
 app.use("/api/trips", tripRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/account", accountRouter);
 
 const error = (request, response) => {
     response.status(404).send({ error: "Unknown endpoint" });

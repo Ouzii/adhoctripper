@@ -42,29 +42,9 @@ const login = async (user) => {
     return response.data
 }
 
-// const getAll = async () => {
-//     const response = await axios.get(baseUrl)
-//     return response.data
-// }
-
-// const getOne = async (id) => {
-//     const response = await axios.get(`${baseUrl}/${id}`)
-//     return response.data
-// }
-
-const updateVehicles = async (updatedUser, id) => {
-    const response = await axios.put(`${baseUrl}/vehicles/${id}`, updatedUser, config())
-    return response.data
-}
-
-const updateEstFuelPrice = async (updatedUser, id) => {
-    const response = await axios.put(`${baseUrl}/fuel/${id}`, updatedUser, config())
-    return response.data
-}
-
 const remove = async () => {
     const response = await axios.delete(baseUrl, config())
     return response
 }
 
-export default { remove, updateVehicles, updateEstFuelPrice, setToken, register, login, isTokenExpired }
+export default { remove, setToken, register, login, isTokenExpired }

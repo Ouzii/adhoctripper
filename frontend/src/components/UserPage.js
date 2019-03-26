@@ -5,6 +5,7 @@ import { setPersonalTrips } from '../reducers/personalTripsReducer'
 import { notify } from '../reducers/notificationReducer'
 import { withRouter } from 'react-router-dom'
 import authService from '../services/auth'
+import accountService from '../services/account'
 import VehicleModifyingItem from './VehicleModifyingItem';
 
 class UserPage extends Component {
@@ -45,7 +46,7 @@ class UserPage extends Component {
             const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
             newVehiclesList.push({ name: event.target.vehicleName.value, consumption: event.target.vehicleConsumption.value })
             newUser = { ...newUser, vehicles: newVehiclesList }
-            const updatedUser = await authService.updateVehicles(newUser, newUser.id)
+            const updatedUser = await accountService.updateVehicles(newUser, newUser.id)
             this.props.setLoggedUser(updatedUser)
             this.props.notify("Vehicle added", 3000)
             this.setState({ vehicleName: '', vehicleConsumption: '', vehicles: updatedUser.vehicles })
@@ -63,7 +64,7 @@ class UserPage extends Component {
             const newVehiclesList = this.props.loggedUser.vehicles.slice()
             newVehiclesList[vehicle.id] = { name: vehicle.name, consumption: vehicle.consumption }
             const newUser = { ...this.props.loggedUser, vehicles: newVehiclesList }
-            const updatedUser = await authService.updateVehicles(newUser, newUser.id)
+            const updatedUser = await accountService.updateVehicles(newUser, newUser.id)
 
             this.props.setLoggedUser(updatedUser)
             this.setState({
@@ -83,7 +84,7 @@ class UserPage extends Component {
                 const newVehiclesList = this.props.loggedUser.vehicles.slice()
                 newVehiclesList.splice(vehicle.id, 1)
                 const newUser = { ...this.props.loggedUser, vehicles: newVehiclesList }
-                const updatedUser = await authService.updateVehicles(newUser, newUser.id)
+                const updatedUser = await accountService.updateVehicles(newUser, newUser.id)
 
                 this.props.setLoggedUser(updatedUser)
                 this.setState({
@@ -102,7 +103,7 @@ class UserPage extends Component {
         try {
             let newUser = this.props.loggedUser
             newUser.estFuelPrice = this.state.estFuelPrice
-            const updatedUser = await authService.updateEstFuelPrice(newUser, newUser.id)
+            const updatedUser = await accountService.updateEstFuelPrice(newUser, newUser.id)
             this.props.setLoggedUser(updatedUser)
             this.props.notify("Saved", 3000)
         } catch (error) {

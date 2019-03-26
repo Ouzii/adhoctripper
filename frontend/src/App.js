@@ -17,6 +17,7 @@ import BrowsingPage from './components/BrowsingPage';
 import tripService from './services/trip';
 import ShowRoute from './components/ShowRoute';
 import PersonalTripsPage from './components/PersonalTripsPage';
+import accountService from './services/account'
 
 class App extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class App extends Component {
       await this.props.setLoggedUser(user)
       await authService.setToken(token)
       await tripService.setToken(token)
+      await accountService.setToken(token)
     } else {
       window.localStorage.removeItem('id_token')
       window.localStorage.removeItem('loggedUser')
