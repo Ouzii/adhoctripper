@@ -28,7 +28,7 @@ class RegisteringPage extends Component {
             this.timeout = null
         }
     }
-    
+
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value })
     }
@@ -62,10 +62,22 @@ class RegisteringPage extends Component {
                 this.props.notify(`Registered and logged in as ${registeredUser.user.username}`, 3000)
             }
         } catch (error) {
-            this.setState({ loading: false, error: error.response.data.error })
-            this.timeout = setTimeout(() => (
-                this.setState({ error: null })
-            ).bind(this), 3000)
+            if (error.response) {
+                this.setState({ loading: false, error: error.response.data.error })
+                this.timeout = setTimeout(() => (
+                    this.setState({ error: null })
+                ).bind(this), 3000)
+            } else if (error.message.message === "Offline") {
+                this.setState({
+                    loading: false,
+                    error: "You're offline! Try again later",
+                    password: '',
+                    password2: ''
+                })
+                this.timeout = setTimeout(() => (
+                    this.setState({ error: null })
+                ).bind(this), 3000)
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import LoginPage from './components/LoginPage';
 import RegisteringPage from './components/RegisteringPage';
 import { setLoggedUser } from './reducers/authReducer';
 import { setSharedTrips } from './reducers/sharedTripsReducer'
-import { setPersonalTrips } from './reducers/personalTripsReducer'
+import { setPersonalTrips, concatToPersonalTrips } from './reducers/personalTripsReducer'
 import NewTripPage from './components/NewTripPage';
 import { saveOfflineTrips } from './components/SaveOfflineTrips'
 import Notification from './components/Notification';
@@ -67,8 +67,10 @@ class App extends Component {
     }
 
     const savedOfflineTrips = JSON.parse(window.localStorage.getItem('savedOfflineTrips'))
-    if(savedOfflineTrips && savedOfflineTrips.length > 0) {
-      await saveOfflineTrips()
+    if (savedOfflineTrips && savedOfflineTrips.length > 0) {
+      const trips = await saveOfflineTrips()
+      this.props.concatToPersonalTrips(trips)
+
     }
 
     const token = JSON.parse(window.localStorage.getItem('id_token'))
@@ -177,4 +179,4 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps,
-  { setLoggedUser, setSharedTrips, setPersonalTrips })(App)
+  { setLoggedUser, setSharedTrips, setPersonalTrips, concatToPersonalTrips })(App)

@@ -47,7 +47,7 @@ tripRouter.get("/:id", async (request, response) => {
 
 tripRouter.post("/", async (request, response) => {
     try {
-        const body = request.body;
+        const body = request.body
         if (body === undefined || (body.constructor === Object && Object.keys(body).length === 0)) {
             return response.status(400).json({ error: "Content missing" });
         }

@@ -154,13 +154,16 @@ class ShowRoute extends Component {
 
 const mapStateToProps = (state) => ({
     loggedUser: state.loggedUser,
-    allTrips: state.personalTrips.concat(state.sharedTrips.filter(trip => {
-        if (state.loggedUser) {
-            return trip.user !== state.loggedUser.id
-        } else {
-            return false
-        }
-    }))
+    allTrips: state.personalTrips && state.sharedTrips ?
+        state.personalTrips.concat(state.sharedTrips.filter(trip => {
+            if (state.loggedUser) {
+                return trip.user !== state.loggedUser.id
+            } else {
+                return false
+            }
+        }))
+        :
+        null
 })
 
 

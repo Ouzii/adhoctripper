@@ -56,11 +56,21 @@ class LoginPage extends Component {
                 this.props.setSharedTrips(sharedTrips)
             }
         } catch (error) {
-            console.log(error)
-            this.setState({ loading: false, error: error.response.data.error, password: '' })
-            this.timeout = setTimeout(() => (
-                this.setState({error: null})
-            ).bind(this), 3000)
+            if (error.response) {
+                this.setState({ loading: false, error: error.response.data.error, password: '' })
+                this.timeout = setTimeout(() => (
+                    this.setState({ error: null })
+                ).bind(this), 3000)
+            } else if (error.message.message === "Offline") {
+                this.setState({
+                    loading: false,
+                    password: '',
+                    error: "You're offline! Try again later"
+                })
+                this.timeout = setTimeout(() => (
+                    this.setState({ error: null })
+                ).bind(this), 3000)
+            }
         }
     }
 
@@ -71,20 +81,20 @@ class LoginPage extends Component {
         return (
             <div>
                 <h1>Login</h1>
-                <div style={{maxHeight: '35px'}}>
-                {this.state.error ?
-                <div className="alert alert-danger">{this.state.error}</div>
-                :
-                <div style={{padding: '18px'}}></div>
-                }
+                <div style={{ maxHeight: '35px' }}>
+                    {this.state.error ?
+                        <div className="alert alert-danger">{this.state.error}</div>
+                        :
+                        <div style={{ padding: '18px' }}></div>
+                    }
                 </div>
                 <div className="flex-container">
                     <form onSubmit={this.handleSubmit}>
                         <input className="flex-item" required type="username" name="username" onChange={this.handleChange} value={this.state.username} placeholder="Username"></input><br></br>
                         <input className="flex-item" required type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder="Password"></input><br></br>
                         {this.state.loading ?
-                            <div className="flex-item" style={{width: '100%'}}>
-                                <Spinner style={{ marginLeft: "43%"}} name='circle' fadeIn='none' color='white' />
+                            <div className="flex-item" style={{ width: '100%' }}>
+                                <Spinner style={{ marginLeft: "43%" }} name='circle' fadeIn='none' color='white' />
                             </div>
 
                             :
@@ -95,7 +105,7 @@ class LoginPage extends Component {
 
                 <br></br>
                 <NavLink to="/register" className="navlink">Not registered yet?</NavLink>
-                
+
             </div>
         )
     }
