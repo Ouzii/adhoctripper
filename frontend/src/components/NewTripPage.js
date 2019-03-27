@@ -75,7 +75,8 @@ class NewTripPage extends Component {
             startAddress: startAddress,
             endAddress: endAddress,
             markers: JSON.stringify(this.mapItem.current.markers.slice(1, this.mapItem.current.markers.length - 1)),
-            user: this.props.loggedUser ? this.props.loggedUser.id : null
+            user: this.props.loggedUser ? this.props.loggedUser.id : null,
+            length: this.mapItem.current.length
         }
 
         try {
@@ -95,6 +96,14 @@ class NewTripPage extends Component {
     }
 
     render() {
+        if (!navigator.onLine) {
+            return (
+                <div>
+                    Offline planning
+                </div>
+            )
+        }
+
         return (
             <div>
                 {this.state.pos ?

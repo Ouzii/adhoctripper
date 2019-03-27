@@ -66,7 +66,8 @@ tripRouter.post("/", async (request, response) => {
             startAddress: body.startAddress,
             endAddress: body.endAddress,
             markers: body.markers,
-            user: body.user
+            user: body.user,
+            length: body.length
         });
         let newTrip = await trip.save();
 

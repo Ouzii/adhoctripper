@@ -10,7 +10,8 @@ const tripSchema = new mongoose.Schema({
     markers: String,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     shared: { type: Boolean, default: false },
-    saved: { type: Date, default: Date.now }
+    saved: { type: Date, default: Date.now },
+    length: Number
 });
 
 tripSchema.statics.format = trip => {
@@ -25,7 +26,8 @@ tripSchema.statics.format = trip => {
         markers: JSON.parse(trip.markers),
         user: trip.user,
         shared: trip.shared,
-        saved: trip.saved
+        saved: trip.saved,
+        length: trip.length
     };
 };
 

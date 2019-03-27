@@ -90,6 +90,24 @@ class ShowRoute extends Component {
                 {props.marker}
             </GoogleMap>
         ));
+
+        if (!navigator.onLine) {
+            const trip = this.props.allTrips.filter(trip => {
+                return trip.id === this.state.id
+            })[0]
+            console.log(trip)
+            return (
+                <div>
+                    <h5>Offline view</h5>
+                    <h1>{trip.name}</h1>
+                    <TripPriceInfo user={this.props.loggedUser} length={trip.length} />
+                    Start: {trip.startAddress}<br />
+                    End: {trip.endAddress}<br />
+                    Via {trip.markers.length} {trip.markers.length === 1 ? 'waypoint':'waypoints'}
+                </div>
+            )
+        }
+
         return (
             <div>
                 <div className="showRoute">
@@ -123,7 +141,10 @@ class ShowRoute extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    loggedUser: state.loggedUser
+    loggedUser: state.loggedUser,
+    allTrips: state.personalTrips.concat(state.sharedTrips.filter(trip => {
+        return trip.user !== state.loggedUser.id
+    }))
 })
 
 

@@ -24,14 +24,18 @@ class Map extends React.Component {
         this.markers = []
         this.directions = {routes: []}
         this.saveTrip = props.saveTrip
+        this.length = 0
     }
 
     componentDidMount() {
-        window.addEventListener('resize', () => this.setState(this.state))
+        window.addEventListener('resize', this.updatePage)
     }
 
+    updatePage() {
+        this.setState(this.state)
+    }
     componentWillUnmount() {
-        window.removeEventListener('resize')
+        window.removeEventListener('resize', this.updatePage)
     }
 
     getRoute() {
@@ -58,6 +62,7 @@ class Map extends React.Component {
                 this.directionsItem.current.setState({ directions: this.directions, panel: this.panelItem })
                 this.markItem.current.setState({ markers: [] })
                 this.googleLinkItem.current.updateLink({origin, destination, result})
+                this.length = result.routes[0].legs.map(leg => leg.distance.value).reduce((total, current) => { return total + current })
             } else {
                 console.error(`error fetching directions ${result}`);
             }
@@ -86,6 +91,10 @@ class Map extends React.Component {
     }
 
     render() {
+        if (!navigator.onLine) {
+            return null
+        }
+
         const MapWithMarker = withGoogleMap(props => (
             <GoogleMap
                 defaultCenter={props.position}
