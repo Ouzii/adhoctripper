@@ -10,6 +10,7 @@ import { setLoggedUser } from './reducers/authReducer';
 import { setSharedTrips } from './reducers/sharedTripsReducer'
 import { setPersonalTrips } from './reducers/personalTripsReducer'
 import NewTripPage from './components/NewTripPage';
+import { saveOfflineTrips } from './components/SaveOfflineTrips'
 import Notification from './components/Notification';
 import UserPage from './components/UserPage';
 import authService from './services/auth'
@@ -63,6 +64,11 @@ class App extends Component {
     } else {
       console.log("No cached requests")
       window.localStorage.setItem('cached_requests', JSON.stringify([]))
+    }
+
+    const savedOfflineTrips = JSON.parse(window.localStorage.getItem('savedOfflineTrips'))
+    if(savedOfflineTrips && savedOfflineTrips.length > 0) {
+      await saveOfflineTrips()
     }
 
     const token = JSON.parse(window.localStorage.getItem('id_token'))

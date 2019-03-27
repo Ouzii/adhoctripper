@@ -98,11 +98,23 @@ class NewTripPage extends Component {
                 this.tripInfoItem.current.setState({ name: '', description: '' })
                 this.props.history.push('/personal')
                 const personalTrips = this.props.personalTrips.slice()
-                personalTrips.push({...error.message.body, id: Math.random(1000)})
+                personalTrips.push({ ...error.message.body, id: Math.random(1000) })
                 this.props.setPersonalTrips(personalTrips)
                 this.props.notify("Trip saved", 3000)
             }
         }
+    }
+
+    cacheOfflineTrip = (event) => {
+        event.preventDefault()
+        const currentOfflineTrips = JSON.parse(window.localStorage.getItem('savedOfflineTrips')) ? JSON.parse(window.localStorage.getItem('savedOfflineTrips')) : []
+        currentOfflineTrips.push({ name: event.target.name.value, description: event.target.description.value, startAddress: event.target.start.value, endAddress: event.target.end.value, user: this.props.loggedUser.id })
+        window.localStorage.setItem('savedOfflineTrips', JSON.stringify(currentOfflineTrips))
+        event.target.name.value = ''
+        event.target.description.value = ''
+        event.target.start.value = ''
+        event.target.end.value = ''
+        this.props.notify("Offline trip saved and will be sent to database when online!", 3000)
     }
 
     render() {
@@ -110,13 +122,21 @@ class NewTripPage extends Component {
             return (
                 <div>
                     <h5>Offline view</h5>
-
+                    <h1>New trip</h1>
+                    <form onSubmit={this.cacheOfflineTrip}>
+                        <input name='name' className='inputBar' placeholder='Name'/>
+                        <input name='description' className='inputBar' placeholder='Description'/>
+                        <input name='start' className='inputBar' placeholder='Starting address'/>
+                        <input name='end' className='inputBar' placeholder='Destination address'/>
+                        <input type='submit' value='Save' />
+                    </form>
                 </div>
             )
         }
 
         return (
             <div>
+                <h1>New trip</h1>
                 {this.state.pos ?
                     <div>
                         <TripInfo ref={this.tripInfoItem} />
