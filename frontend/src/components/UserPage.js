@@ -31,11 +31,23 @@ class UserPage extends Component {
 
     deleteAccount = async () => {
         if (window.confirm('Are you sure you want to delete your account and all your data?')) {
-            await authService.remove()
-            this.props.setLoggedUser(null)
-            window.localStorage.removeItem('id_token')
-            this.props.history.push('/')
-            this.props.notify("Account deleted", 3000)
+            try {
+                await authService.remove(this.props.loggedUser.id)
+                this.props.setLoggedUser(null)
+                window.localStorage.removeItem('id_token')
+                this.props.history.push('/')
+                this.props.notify("Account deleted", 3000)
+            } catch (error) {
+                console.log(error)
+                if (error.response) {
+                    this.props.notify(error.response.data.error, 3000)
+                } else if (error.message.message === "Offline") {
+                    this.props.setLoggedUser(null)
+                    window.localStorage.removeItem('id_token')
+                    this.props.history.push('/')
+                    this.props.notify("Account deleted in offline mode. Launch the application in online mode to delete your info from database", 5000)
+                }
+            }
         }
     }
 
@@ -79,7 +91,13 @@ class UserPage extends Component {
             this.props.notify("Saved", 3000)
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                this.props.setLoggedUser(error.message.body)
+                this.props.notify("Saved", 3000)
+                this.setState({ vehicles: error.message.body.vehicles })
+            }
         }
 
     }
@@ -100,7 +118,13 @@ class UserPage extends Component {
             }
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                this.props.setLoggedUser(error.message.body)
+                this.props.notify("Deleted", 3000)
+                this.setState({ vehicles: error.message.body.vehicles })
+            }
         }
     }
 
@@ -114,7 +138,12 @@ class UserPage extends Component {
             this.props.notify("Saved", 3000)
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                this.props.setLoggedUser(error.message.body)
+                this.props.notify("Saved", 3000)
+            }
         }
     }
 

@@ -132,7 +132,7 @@ authRouter.put("/email", async (request, response) => {
 
 authRouter.delete("/", async (request, response) => {
   try {
-    const decoded = jwt.verify(request.headers.token, secret)
+    const decoded = jwt.verify(request.body.token, secret)
     const accountToBeDeleted = await Account.findById(decoded.id)
     if (!accountToBeDeleted) {
       return response.status(404).send({ error: "Account not found" });

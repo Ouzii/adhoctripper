@@ -54,10 +54,20 @@ class ModifyAccountInfo extends Component {
             })
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
-            this.setState({
-                passwordLoading: false
-            })
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+                this.setState({
+                    passwordLoading: false
+                })
+            } else if (error.message.message === "Offline") {
+                this.props.notify("Password changed", 3000)
+                this.setState({
+                    passwordLoading: false,
+                    password: '',
+                    newPassword: '',
+                    newPassword2: ''
+                })
+            }
         }
     }
 
@@ -76,10 +86,18 @@ class ModifyAccountInfo extends Component {
             })
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
-            this.setState({
-                emailLoading: false
-            })
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+                this.setState({
+                    emailLoading: false
+                })
+            } else if (error.message.message === "Offline") {
+                this.props.notify("Email changed", 3000)
+                this.props.setLoggedUser(error.message.body)
+                this.setState({
+                    emailLoading: false
+                })
+            }
         }
     }
 
@@ -94,17 +112,17 @@ class ModifyAccountInfo extends Component {
                     {this.state.passwordLoading ?
                         <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
                         :
-                        <input className="flex-item" type="submit" value="Submit" disabled={this.state.newPassword.length >= 8 && this.state.newPassword === this.state.newPassword2 ? false : true}/>
+                        <input className="flex-item" type="submit" value="Submit" disabled={this.state.newPassword.length >= 8 && this.state.newPassword === this.state.newPassword2 ? false : true} />
                     }
                 </form><br /><br />
                 <h2>Change email</h2>
                 <form onSubmit={this.handleEmailChange}>
-                    <input type='email' required name='newEmail' value={this.state.newEmail} onChange={this.handleChange} placeholder='New email'/>
-                {this.state.emailLoading ?
-                    <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
-                    :
-                    <input className="flex-item" type="submit" value="Submit" disabled={this.state.newEmail === this.props.loggedUser.email ? true : false}/>
-                }
+                    <input type='email' required name='newEmail' value={this.state.newEmail} onChange={this.handleChange} placeholder='New email' />
+                    {this.state.emailLoading ?
+                        <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
+                        :
+                        <input className="flex-item" type="submit" value="Submit" disabled={this.state.newEmail === this.props.loggedUser.email ? true : false} />
+                    }
                 </form>
             </div>
         )

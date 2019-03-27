@@ -66,8 +66,8 @@ const update = async (updatedTrip, id) => {
     return response.data
 }
 
-const remove = async (id) => {
-    const response = await axios.delete(`${baseUrl}/${id}`, config())
+const remove = async (trip) => {
+    const response = await axios.delete(`${baseUrl}/${trip.id}`, { data: {...trip, token: token}})
     return response.data
 }
 

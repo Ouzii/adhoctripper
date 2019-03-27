@@ -33,6 +33,38 @@ class App extends Component {
 
   async componentDidMount() {
     window.addEventListener('resize', this.reloadPage.bind(this))
+    const cached = JSON.parse(window.localStorage.getItem('cached_requests'))
+    if (cached && cached.length > 0) {
+      cached.forEach(async req => {
+        switch (req.method) {
+          case 'get':
+
+            await axios.get(req.url, req.data, { headers: req.headers })
+            break
+          case 'post':
+            await axios.post(req.url, req.data, { headers: req.headers })
+            break
+          case 'put':
+            await axios.put(req.url, req.data, { headers: req.headers })
+            break
+          case 'delete':
+            await axios.delete(req.url, { data: req.data })
+            break
+          default:
+            break
+        }
+        req.sent = true
+      })
+      const unsentRequests = cached.filter(req => {
+        return req.sent === false
+      })
+      window.localStorage.setItem('cached_requests', JSON.stringify(unsentRequests))
+      console.log("Cache sent")
+    } else {
+      console.log("No cached requests")
+      window.localStorage.setItem('cached_requests', JSON.stringify([]))
+    }
+
     const token = JSON.parse(window.localStorage.getItem('id_token'))
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
     if (token && !authService.isTokenExpired(token) && user) {
@@ -60,44 +92,12 @@ class App extends Component {
       }
     }
 
-    const cached = JSON.parse(window.localStorage.getItem('cached_requests'))
-    if (cached && cached.length > 0) {
-      cached.forEach(async req => {
-        switch (req.method) {
-          case 'get':
-
-            await axios.get(req.url, req.data, { headers: req.headers })
-            break
-          case 'post':
-            await axios.post(req.url, req.data, { headers: req.headers })
-            break
-          case 'put':
-            await axios.put(req.url, req.data, { headers: req.headers })
-            break
-          case 'delete':
-            await axios.delete(req.url, req.data, { headers: req.headers })
-            break
-          default:
-            break
-        }
-        req.sent = true
-      })
-      const unsentRequests = cached.filter(req => {
-        return req.sent === false
-      })
-      window.localStorage.setItem('cached_requests', JSON.stringify(unsentRequests))
-      console.log("Cache sent")
-    } else {
-      console.log("No cached requests")
-      window.localStorage.setItem('cached_requests', JSON.stringify([]))
-    }
-
     axios.interceptors.request.use(req => {
       if (!navigator.onLine) {
         const cached = JSON.parse(window.localStorage.getItem('cached_requests'))
         cached.push(req)
         window.localStorage.setItem('cached_requests', JSON.stringify(cached))
-        throw new axios.Cancel({body: req.data, message: "Offline"})
+        throw new axios.Cancel({ body: req.data, message: "Offline" })
       } else {
         return req
       }
@@ -108,9 +108,9 @@ class App extends Component {
   }
 
   reloadPage() {
-    console.log(this)
-    // this.setState(this.state)
+    this.setState(this.state)
   }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.reloadPage.bind(this))
   }

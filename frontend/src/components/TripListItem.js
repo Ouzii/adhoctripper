@@ -33,18 +33,30 @@ class TripListItem extends Component {
                 await this.props.removeFromSharedTrips(updatedTrip)
             }
             await this.props.updatePersonalTrips(updatedTrip)
-            
+
             this.props.notify(updatedTrip.shared ? `${updatedTrip.name} shared` : `${updatedTrip.name} unshared`, 3000)
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                await this.setState({ trip: error.message.body })
+                if (error.message.body.shared) {
+                    await this.props.addToSharedTrips(error.message.body)
+                } else {
+                    await this.props.removeFromSharedTrips(error.message.body)
+                }
+                await this.props.updatePersonalTrips(error.message.body)
+
+                this.props.notify(error.message.body.shared ? `${error.message.body.name} shared` : `${error.message.body.name} unshared`, 3000)
+            }
         }
     }
 
     deleteTrip = async (event) => {
         try {
             if (window.confirm(`Are you sure you want to delete ${this.state.trip.name}?`)) {
-                const deletedTrip = await tripService.remove(this.state.trip.id)
+                const deletedTrip = await tripService.remove(this.state.trip)
                 if (deletedTrip.shared) {
                     this.props.removeFromSharedTrips(deletedTrip)
                 }
@@ -53,9 +65,17 @@ class TripListItem extends Component {
             }
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                if (error.message.body.shared) {
+                    this.props.removeFromSharedTrips(error.message.body)
+                }
+                this.props.removeFromPersonalTrips(error.message.body)
+                this.props.notify(`${error.message.body.name} removed`, 3000)
+            }
         }
-    } 
+    }
 
     render() {
         return (
@@ -70,14 +90,14 @@ class TripListItem extends Component {
                             <p>{this.state.trip.description}</p>
                             <NavLink to={`/trip/${this.state.trip.id}`} >Show</NavLink><br />
                             <p>Saved {new Intl.DateTimeFormat('en-GB', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: '2-digit',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit'
+                                year: 'numeric',
+                                month: 'long',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
 
-                                    }).format(new Date(this.state.trip.saved))}</p>
+                            }).format(new Date(this.state.trip.saved))}</p>
                         </div>
                         {this.state.personal ?
                             <div>
@@ -99,5 +119,9 @@ class TripListItem extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    personalTrips: state.personalTrips
+  })
 
-export default connect(null, { notify, addToSharedTrips, removeFromSharedTrips, updatePersonalTrips, removeFromPersonalTrips })(TripListItem)
+
+export default connect(mapStateToProps, { notify, addToSharedTrips, removeFromSharedTrips, updatePersonalTrips, removeFromPersonalTrips })(TripListItem)

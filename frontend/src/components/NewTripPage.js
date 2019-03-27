@@ -88,10 +88,20 @@ class NewTripPage extends Component {
             personalTrips.push(savedTrip)
             this.props.setPersonalTrips(personalTrips)
             this.props.notify("Trip saved", 3000)
-            
+
         } catch (error) {
             console.log(error)
-            this.props.notify(error.response.data.error, 3000)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                this.mapItem.current.resetAll()
+                this.tripInfoItem.current.setState({ name: '', description: '' })
+                this.props.history.push('/personal')
+                const personalTrips = this.props.personalTrips.slice()
+                personalTrips.push({...error.message.body, id: Math.random(1000)})
+                this.props.setPersonalTrips(personalTrips)
+                this.props.notify("Trip saved", 3000)
+            }
         }
     }
 
@@ -100,7 +110,7 @@ class NewTripPage extends Component {
             return (
                 <div>
                     <h5>Offline view</h5>
-                    
+
                 </div>
             )
         }

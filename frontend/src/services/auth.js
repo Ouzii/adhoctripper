@@ -50,8 +50,8 @@ const login = async (user) => {
     return response.data
 }
 
-const remove = async () => {
-    const response = await axios.delete(baseUrl, config())
+const remove = async (account) => {
+    const response = await axios.delete(baseUrl, { data: {...account, token: token }})
     return response.data
 }
 
