@@ -28,14 +28,15 @@ class Map extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.updatePage)
+        window.addEventListener('resize', this.updatePage.bind(this))
     }
 
     updatePage() {
         this.setState(this.state)
     }
+    
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updatePage)
+        window.removeEventListener('resize', this.updatePage.bind(this))
     }
 
     getRoute() {

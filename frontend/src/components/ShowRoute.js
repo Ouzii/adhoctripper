@@ -31,7 +31,12 @@ class ShowRoute extends Component {
     async componentDidMount() {
         try {
             if (this.state.id !== '0') {
-                const trip = await tripService.getOne(this.state.id)
+                let trip = this.props.allTrips.filter(trip => {
+                    return trip.id === this.state.id
+                })[0]
+                if (!trip) {
+                    trip = await tripService.getOne(this.state.id)
+                }
                 let googleLink = this.state.googleLink + `${trip.start.lat},${trip.start.lng}/`
                 trip.markers.forEach(marker => {
                     googleLink = googleLink + `${marker.lat},${marker.lng}/`
@@ -43,7 +48,9 @@ class ShowRoute extends Component {
                     estFuelPrice: this.props.loggedUser ? this.props.loggedUser.estFuelPrice : 0,
                     googleLink: googleLink
                 })
-                await this.getRoute()
+                if (navigator.onLine) {
+                    await this.getRoute()
+                }
             }
         } catch (error) {
             console.log(error)
@@ -95,15 +102,20 @@ class ShowRoute extends Component {
             const trip = this.props.allTrips.filter(trip => {
                 return trip.id === this.state.id
             })[0]
-            console.log(trip)
             return (
                 <div>
-                    <h5>Offline view</h5>
-                    <h1>{trip.name}</h1>
-                    <TripPriceInfo user={this.props.loggedUser} length={trip.length} />
-                    Start: {trip.startAddress}<br />
-                    End: {trip.endAddress}<br />
-                    Via {trip.markers.length} {trip.markers.length === 1 ? 'waypoint':'waypoints'}
+                    {trip ?
+                        <div>
+                            <h5>Offline view</h5>
+                            <h1>{trip.name}</h1>
+                            <TripPriceInfo user={this.props.loggedUser} length={trip.length} />
+                            Start: {trip.startAddress}<br />
+                            End: {trip.endAddress}<br />
+                            Via {trip.markers.length} {trip.markers.length === 1 ? 'waypoint' : 'waypoints'}
+                        </div>
+                        :
+                        <div />
+                    }
                 </div>
             )
         }
@@ -129,7 +141,7 @@ class ShowRoute extends Component {
                                 routeMapper={<RouteMapping directions={this.state.directions} ref={this.directionsItem} panel={this.panelItem} />}
                             /><br />
                             <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} /><br />
-                            <GoogleMapLink ref={this.googleLinkItem} /><br/>
+                            <GoogleMapLink ref={this.googleLinkItem} /><br />
                         </div>
                         :
                         <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
@@ -143,7 +155,11 @@ class ShowRoute extends Component {
 const mapStateToProps = (state) => ({
     loggedUser: state.loggedUser,
     allTrips: state.personalTrips.concat(state.sharedTrips.filter(trip => {
-        return trip.user !== state.loggedUser.id
+        if (state.loggedUser) {
+            return trip.user !== state.loggedUser.id
+        } else {
+            return false
+        }
     }))
 })
 

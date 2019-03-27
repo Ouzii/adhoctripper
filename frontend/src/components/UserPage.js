@@ -42,16 +42,22 @@ class UserPage extends Component {
     handleVehicleAdd = async (event) => {
         event.preventDefault()
         try {
-            let newUser = this.props.loggedUser
-            const newVehiclesList = newUser.vehicles.map(vehicle => { return vehicle })
+            const newVehiclesList = this.props.loggedUser.vehicles.slice()
             newVehiclesList.push({ name: event.target.vehicleName.value, consumption: event.target.vehicleConsumption.value })
-            newUser = { ...newUser, vehicles: newVehiclesList }
+            const newUser = { ...this.props.loggedUser, vehicles: newVehiclesList }
             const updatedUser = await accountService.updateVehicles(newUser, newUser.id)
             this.props.setLoggedUser(updatedUser)
             this.props.notify("Vehicle added", 3000)
             this.setState({ vehicleName: '', vehicleConsumption: '', vehicles: updatedUser.vehicles })
         } catch (error) {
-            this.props.notify(error.response.data.error, 3000)
+            console.log(error)
+            if (error.response) {
+                this.props.notify(error.response.data.error, 3000)
+            } else if (error.message.message === "Offline") {
+                this.props.setLoggedUser(error.message.body)
+                this.props.notify("Vehicle added", 3000)
+                this.setState({ vehicleName: '', vehicleConsumption: '', vehicles: error.message.body.vehicles })
+            }
         }
     }
 

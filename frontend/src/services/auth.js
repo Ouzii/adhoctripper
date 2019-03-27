@@ -9,6 +9,14 @@ if (process.env.NODE_ENV !== 'development') {
 }
 let token
 
+
+// axios.interceptors.request.use(req => {
+//     console.log(req)
+//     return req
+// }, error => {
+//     return Promise.reject(error)
+// })
+
 const setToken = (idToken) => {
     window.localStorage.setItem("id_token", JSON.stringify(idToken))
     token = idToken

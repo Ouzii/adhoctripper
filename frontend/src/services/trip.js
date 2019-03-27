@@ -8,6 +8,14 @@ if (process.env.NODE_ENV !== 'development') {
 }
 let token
 
+
+// axios.interceptors.request.use(req => {
+//     console.log(req)
+//     return req
+// }, error => {
+//     return Promise.reject(error)
+// })
+
 const setToken = (idToken) => {
     token = idToken
 }
@@ -44,13 +52,13 @@ const getPersonal = async () => {
 }
 
 const getOne = async (id) => {
-    if(token) {
+    if (token) {
         const response = await axios.get(`${baseUrl}/${id}`, config())
         return response.data
     }
     return setTimeout(() => {
-            getOne(id)
-        }, 3000)
+        getOne(id)
+    }, 3000)
 }
 
 const update = async (updatedTrip, id) => {
@@ -63,4 +71,4 @@ const remove = async (id) => {
     return response.data
 }
 
-export default { getShared, remove, update, setToken, getPersonal, saveOne, getOne, checkIfTokenInLocal}
+export default { getShared, remove, update, setToken, getPersonal, saveOne, getOne, checkIfTokenInLocal }

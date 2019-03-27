@@ -8,6 +8,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 let token
 
+
+
 const setToken = (idToken) => {
     window.localStorage.setItem("id_token", JSON.stringify(idToken))
     token = idToken
@@ -19,6 +21,10 @@ const config = () => {
     }
 }
 
+const getAccount = async () => {
+    const response = await axios.get(baseUrl, config())
+    return response.data
+}
 const updateVehicles = async (updatedUser, id) => {
     const response = await axios.put(`${baseUrl}/vehicles/${id}`, updatedUser, config())
     return response.data
@@ -29,4 +35,4 @@ const updateEstFuelPrice = async (updatedUser, id) => {
     return response.data
 }
 
-export default { updateVehicles, updateEstFuelPrice, setToken }
+export default { updateVehicles, updateEstFuelPrice, setToken, getAccount }

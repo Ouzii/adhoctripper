@@ -99,7 +99,8 @@ class NewTripPage extends Component {
         if (!navigator.onLine) {
             return (
                 <div>
-                    Offline planning
+                    <h5>Offline view</h5>
+                    
                 </div>
             )
         }

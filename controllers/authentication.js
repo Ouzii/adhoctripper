@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = require('../utils/config').secret;
 
-
-
 authRouter.post("/login", async (request, response) => {
   try {
     const body = request.body;

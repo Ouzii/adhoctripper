@@ -19,6 +19,7 @@ import ShowRoute from './components/ShowRoute';
 import PersonalTripsPage from './components/PersonalTripsPage';
 import accountService from './services/account'
 import ModifyAccountInfo from './components/ModifyAccountInfo';
+import axios from 'axios'
 
 class App extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    // window.addEventListener('resize', () => this.setState(this.state))
+    window.addEventListener('resize', this.reloadPage.bind(this))
     const token = JSON.parse(window.localStorage.getItem('id_token'))
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
     if (token && !authService.isTokenExpired(token) && user) {
@@ -43,16 +44,76 @@ class App extends Component {
       window.localStorage.removeItem('id_token')
       window.localStorage.removeItem('loggedUser')
     }
-    const sharedTrips = await tripService.getShared()
-    await this.props.setSharedTrips(sharedTrips)
 
-    const personalTrips = await tripService.getPersonal()
-    await this.props.setPersonalTrips(personalTrips)
+    if (!navigator.onLine) {
+      await this.props.setSharedTrips(JSON.parse(window.localStorage.getItem('sharedTrips')))
+      await this.props.setPersonalTrips(JSON.parse(window.localStorage.getItem('personalTrips')))
+    } else {
+      const sharedTrips = await tripService.getShared()
+      await this.props.setSharedTrips(sharedTrips)
+
+      const personalTrips = await tripService.getPersonal()
+      await this.props.setPersonalTrips(personalTrips)
+      if (this.props.loggedUser) {
+        const user = await accountService.getAccount()
+        await this.props.setLoggedUser(user)
+      }
+    }
+
+    const cached = JSON.parse(window.localStorage.getItem('cached_requests'))
+    if (cached && cached.length > 0) {
+      cached.forEach(async req => {
+        switch (req.method) {
+          case 'get':
+
+            await axios.get(req.url, req.data, { headers: req.headers })
+            break
+          case 'post':
+            await axios.post(req.url, req.data, { headers: req.headers })
+            break
+          case 'put':
+            await axios.put(req.url, req.data, { headers: req.headers })
+            break
+          case 'delete':
+            await axios.delete(req.url, req.data, { headers: req.headers })
+            break
+          default:
+            break
+        }
+        req.sent = true
+      })
+      const unsentRequests = cached.filter(req => {
+        return req.sent === false
+      })
+      window.localStorage.setItem('cached_requests', JSON.stringify(unsentRequests))
+      console.log("Cache sent")
+    } else {
+      console.log("No cached requests")
+      window.localStorage.setItem('cached_requests', JSON.stringify([]))
+    }
+
+    axios.interceptors.request.use(req => {
+      if (!navigator.onLine) {
+        const cached = JSON.parse(window.localStorage.getItem('cached_requests'))
+        cached.push(req)
+        window.localStorage.setItem('cached_requests', JSON.stringify(cached))
+        throw new axios.Cancel({body: req.data, message: "Offline"})
+      } else {
+        return req
+      }
+    }, error => {
+      return Promise.reject(error)
+    })
+
   }
 
-  // componentWillUnmount() {
-  //   window.removeEventListener('resize')
-  // }
+  reloadPage() {
+    console.log(this)
+    // this.setState(this.state)
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.reloadPage.bind(this))
+  }
 
   scrollToTop = index => {
     Array.from(this.el.containerNode.children).forEach((child, i) => {
@@ -77,7 +138,7 @@ class App extends Component {
                 <ShowRoute key={match.params.id} id={match.params.id} />
               )} />
               <Route path="/userpage/:id/modify" defaultParams={{ id: '1' }} render={({ match }) => (
-                <ModifyAccountInfo key={match.params.id}/>
+                <ModifyAccountInfo key={match.params.id} />
               )} />
             </SwipeableRoutes>
 
