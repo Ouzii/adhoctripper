@@ -7,7 +7,8 @@ import Mark from './Mark'
 import RouteMapping from './RouteMapping'
 import TripPriceInfo from './TripPriceInfo'
 import Spinner from 'react-spinkit'
-import GoogleMapLink from './GoogleMapLink';
+import GoogleMapLink from './GoogleMapLink'
+import { NavLink } from 'react-router-dom'
 
 class ShowRoute extends Component {
     constructor(props) {
@@ -120,6 +121,14 @@ class ShowRoute extends Component {
             )
         }
 
+        if (this.state.id === '0') {
+            return (
+                <div className='noTrips'>
+                    <h2>No trip info to show</h2>
+                    <NavLink to='/personal' >Go to my trips</NavLink>
+                </div>
+            )
+        }
         return (
             <div>
                 <div className="showRoute">

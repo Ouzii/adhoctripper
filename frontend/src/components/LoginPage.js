@@ -69,7 +69,7 @@ class LoginPage extends Component {
                 })
                 this.timeout = setTimeout(() => (
                     this.setState({ error: null })
-                ).bind(this), 3000)
+                ), 3000)
             }
         }
     }
