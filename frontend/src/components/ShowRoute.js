@@ -9,6 +9,7 @@ import TripPriceInfo from './TripPriceInfo'
 import Spinner from 'react-spinkit'
 import GoogleMapLink from './GoogleMapLink'
 import { NavLink } from 'react-router-dom'
+import weatherService from '../services/weather'
 
 class ShowRoute extends Component {
     constructor(props) {
@@ -16,11 +17,12 @@ class ShowRoute extends Component {
         this.state = {
             id: props.id,
             trip: null,
-            length: null,
             directions: null,
             vehicle: null,
             estFuelPrice: null,
-            googleLink: 'https://www.google.com/maps/dir/'
+            googleLink: 'https://www.google.com/maps/dir/',
+            startWeather: null,
+            endWeather: null
         }
 
         this.directionsService = new google.maps.DirectionsService()
@@ -43,11 +45,19 @@ class ShowRoute extends Component {
                     googleLink = googleLink + `${marker.lat},${marker.lng}/`
                 })
                 googleLink = googleLink + `${trip.end.lat},${trip.end.lng}`
+                let startWeather = null
+                let endWeather = null
+                if (navigator.onLine) {
+                    startWeather = await weatherService.getWeather(trip.start)
+                    endWeather = await weatherService.getWeather(trip.end)
+                }
                 await this.setState({
                     trip: trip,
                     vehicle: this.props.loggedUser ? this.props.loggedUser.vehicles[0] : null,
                     estFuelPrice: this.props.loggedUser ? this.props.loggedUser.estFuelPrice : 0,
-                    googleLink: googleLink
+                    googleLink: googleLink,
+                    startWeather: startWeather,
+                    endWeather: endWeather
                 })
                 if (navigator.onLine) {
                     await this.getRoute()
@@ -73,13 +83,10 @@ class ShowRoute extends Component {
             travelMode: google.maps.TravelMode.DRIVING
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-
-                const length = result.routes[0].legs.map(leg => leg.distance.value)
                 this.setState({
-                    directions: result,
-                    length: length.reduce((total, current) => { return total + current })
+                    directions: result
                 })
-                this.directionsItem.current.setState({ directions: result, panel: this.panelItem })
+                this.directionsItem.current.setState({ directions: {...result}, panel: this.panelItem })
                 this.googleLinkItem.current.updateLink({ origin: { location: this.state.trip.start }, destination: { location: this.state.trip.end }, result })
             } else {
                 console.error(`error fetching directions ${result}`);
@@ -129,13 +136,14 @@ class ShowRoute extends Component {
                 </div>
             )
         }
+
         return (
             <div>
                 <div className="showRoute">
                     <h1>{this.state.trip ? this.state.trip.name : 'Loading..'}</h1>
-                    {this.state.length ?
+                    {this.state.trip && this.state.trip.length ?
                         <div>
-                            <TripPriceInfo user={this.props.loggedUser} length={this.state.length} />
+                            <TripPriceInfo user={this.props.loggedUser} length={this.state.trip.length} />
                         </div>
                         :
                         <div />}
@@ -151,6 +159,13 @@ class ShowRoute extends Component {
                             /><br />
                             <div id="directions-panel" style={{ width: window.innerWidth * 0.8 }} ref={this.panelItem} /><br />
                             <GoogleMapLink ref={this.googleLinkItem} /><br />
+                            {this.state.startWeather && this.state.endWeather ?
+                                <div>
+                                    Current weather at origin:<br /> {this.state.startWeather.description}, temp {this.state.startWeather.temperature}°C, wind {this.state.startWeather.wind}m/s<br /><br />
+                                    Current weather at destination:<br /> {this.state.endWeather.description}, temp {this.state.endWeather.temperature}°C, wind {this.state.endWeather.wind}m/s
+                            </div>
+                                :
+                                <div />}
                         </div>
                         :
                         <Spinner style={{ margin: "auto" }} name='circle' fadeIn='none' color='white' />
@@ -172,7 +187,8 @@ const mapStateToProps = (state) => ({
             }
         }))
         :
-        null
+        null,
+    weather: state.weather
 })
 
 

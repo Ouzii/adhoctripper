@@ -179,7 +179,7 @@ class UserPage extends Component {
                 <div style={{ border: 'solid grey', borderWidth: '0px 4px 4px 4px' }}>
                     <br />
                     <button onClick={() => this.logout()}>Logout</button><br /><br />
-                    <NavLink to={`/userpage/${this.props.loggedUser.id}/modify`} >Modify account information</NavLink><br /><br />
+                    <NavLink to={`/account/${this.props.loggedUser.id}/modify`} >Modify account information</NavLink><br /><br />
                     <button onClick={() => this.deleteAccount()}>Delete account</button><br />
                     <br />
                 </div>

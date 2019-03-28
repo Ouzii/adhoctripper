@@ -21,6 +21,8 @@ import PersonalTripsPage from './components/PersonalTripsPage';
 import accountService from './services/account'
 import ModifyAccountInfo from './components/ModifyAccountInfo';
 import axios from 'axios'
+import weatherService from './services/weather'
+import { setWeather } from './reducers/weatherReducer'
 
 class App extends Component {
   constructor(props) {
@@ -98,6 +100,11 @@ class App extends Component {
         const user = await accountService.getAccount()
         await this.props.setLoggedUser(user)
       }
+
+      this.loadPosition().then(async (position) => {
+        const weather = await weatherService.getWeather(position)
+        this.props.setWeather(weather)
+      })
     }
 
     axios.interceptors.request.use(req => {
@@ -113,6 +120,25 @@ class App extends Component {
       return Promise.reject(error)
     })
 
+  }
+
+  loadPosition = async () => {
+    try {
+      const position = await this.getCurrentPosition()
+      const { latitude, longitude } = position.coords
+      return {
+        lat: latitude,
+        lng: longitude
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  getCurrentPosition = (options = {}) => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, options)
+    })
   }
 
   reloadPage() {
@@ -141,11 +167,11 @@ class App extends Component {
               <Route path="/personal" component={PersonalTripsPage} />
               <Route exact path="/" component={BrowsingPage} />
               <Route path="/new" component={NewTripPage} />
-              <Route path="/userpage" component={UserPage} />
-              <Route path="/trip/:id" defaultParams={{ id: '0' }} render={({ match }) => (
+              <Route exact path="/userpage" component={UserPage} />
+              <Route exact path="/trip/:id" defaultParams={{ id: '0' }} render={({ match }) => (
                 <ShowRoute key={match.params.id} id={match.params.id} />
               )} />
-              <Route path="/userpage/:id/modify" defaultParams={{ id: '1' }} render={({ match }) => (
+              <Route path="/account/:id/modify" defaultParams={{ id: '1' }} render={({ match }) => (
                 <ModifyAccountInfo key={match.params.id} />
               )} />
             </SwipeableRoutes>
@@ -163,10 +189,19 @@ class App extends Component {
             </SwipeableRoutes>
           }
 
-          <Notification />
+
+          {/* <div style={{backgroundColor:'whitesmoke', color: 'black', position:'absolute', bottom:'0', left: '0', right: '0'}}>
+          <h2>ffoooooooooter</h2>
+          </div> */}
         </div>
 
-
+        <div className='footer'>
+          <Notification />
+          {this.props.weather ?
+            `${this.props.weather.description}, temp ${this.props.weather.temperature}°C, wind speed ${this.props.weather.wind}m/s`
+            :
+            'Fetching weather info...'}
+        </div>
       </div>
     );
   }
@@ -175,8 +210,9 @@ class App extends Component {
 const mapStateToProps = (state) => ({
   loggedUser: state.loggedUser,
   sharedTrips: state.sharedTrips,
-  personalTrips: state.personalTrips
+  personalTrips: state.personalTrips,
+  weather: state.weather
 })
 
 export default connect(mapStateToProps,
-  { setLoggedUser, setSharedTrips, setPersonalTrips, concatToPersonalTrips })(App)
+  { setLoggedUser, setSharedTrips, setPersonalTrips, concatToPersonalTrips, setWeather })(App)

@@ -4,11 +4,15 @@ import { connect } from 'react-redux'
 class Notification extends React.Component {
     render() {
 
-        if (this.props.notification.length === 0) {
-            return null
-        }
-        return <p>{this.props.notification}</p>
-        
+        return (
+            <div style={{height: '10vmin'}}>
+                {this.props.notification.length !== 0 ?
+                    <div>{this.props.notification}</div>
+                    :
+                    <div />
+                }
+            </div>
+        )
     }
 
 }

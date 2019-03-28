@@ -8,6 +8,7 @@ const cors = require("cors");
 const tripRouter = require("./controllers/trip");
 const authRouter = require("./controllers/authentication");
 const accountRouter = require("./controllers/account")
+const weatherRouter = require('./controllers/weather')
 
 
 mongoose
@@ -34,6 +35,7 @@ app.use(express.static("build"));
 app.use("/api/trips", tripRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
+app.use("/api/weather", weatherRouter);
 
 const error = (request, response) => {
     response.status(404).send({ error: "Unknown endpoint" });

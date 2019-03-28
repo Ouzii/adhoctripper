@@ -19,4 +19,5 @@ PVM | KLO | TUNTIA | TEHTY |
 26.03.2019|17:45-19:15|1,5|Implementoitu salasanan ja sähköpostiosoitteen vaihtaminen.|
 27.03.2019|10:00-16:30|6,5|Testattu toimintaa, alettu parantelemaan serviceWorkeria. Korjattu InvalidValue errorit konsolista. Rakennettu offline toiminnallisuuksia (käyttäjän tietojen muokkaus ja lisäys, tripin offline lisäys, trippien jakamisen muuttaminen jne.)|
 27.03.2019|23:45-01:15|1,5|Korjattu "Cannot read property 'concat' of null" ShowRoute komponentissa. Jatkettu offline trippien tallentamisen parantamista (lisätään personal-listalle). Lisätty kirjautumiseen ja rekisteröitymiseen offline-virheilmoitukset.|
-**YHT**||**67,0**|
+28.03.2019|12:30-13:30|1,0|Lisätty footer ja implementoitu säätietojen hakeminen ja näyttäminen.|
+**YHT**||**68,0**|
