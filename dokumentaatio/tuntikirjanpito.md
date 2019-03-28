@@ -21,4 +21,5 @@ PVM | KLO | TUNTIA | TEHTY |
 27.03.2019|23:45-01:15|1,5|Korjattu "Cannot read property 'concat' of null" ShowRoute komponentissa. Jatkettu offline trippien tallentamisen parantamista (lisätään personal-listalle). Lisätty kirjautumiseen ja rekisteröitymiseen offline-virheilmoitukset.|
 28.03.2019|12:30-13:30|1,0|Lisätty footer ja implementoitu säätietojen hakeminen ja näyttäminen.|
 28.03.2019|16:00-18:30|2,5|Refaktoroitu koodia. Siirretty google API palveluita backendin puolelle (geocoding ja reverse geocoding), mutta directions APIa ei voitu siirtää, sillä backendin googlemaps-komponentti ei palauta kaikkea tarvittavaa.|
-**YHT**||**70,5**|
+28.03.2019|20:30-21:30|1,0|Siistitty repositoriota, mm. parannettu README.md. Testattu sovellus toimivaksi Herokussa.|
+**YHT**||**71,5**|
