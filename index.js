@@ -9,6 +9,7 @@ const tripRouter = require("./controllers/trip");
 const authRouter = require("./controllers/authentication");
 const accountRouter = require("./controllers/account")
 const weatherRouter = require('./controllers/weather')
+const googleServicesRouter = require('./controllers/googleServices')
 
 
 mongoose
@@ -36,6 +37,7 @@ app.use("/api/trips", tripRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/weather", weatherRouter);
+app.use("/api/maps", googleServicesRouter);
 
 const error = (request, response) => {
     response.status(404).send({ error: "Unknown endpoint" });
