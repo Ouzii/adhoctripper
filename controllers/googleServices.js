@@ -1,10 +1,12 @@
-/*global google*/
 const googleServicesRouter = require("express").Router();
 const { googleApiKey } = require('../utils/config')
-const googleMapsClient = require('@google/maps').createClient({
-    key: googleApiKey
-})
+const GoogleMapsApi = require('googlemaps')
 
+const googleApi = new GoogleMapsApi({
+    key: googleApiKey,
+    secure: true,
+    encode_polylines: false
+})
 
 
 googleServicesRouter.post("/directions", async (request, response) => {
@@ -12,21 +14,19 @@ googleServicesRouter.post("/directions", async (request, response) => {
         if (request.body === undefined || (request.body.constructor === Object && Object.keys(request.body).length === 0)) {
             return response.status(400).json({ error: "Content missing" });
         }
-
-        return googleMapsClient.directions({
+        googleApi.directions({
             origin: `${request.body.origin.lat}, ${request.body.origin.lng}`,
             destination: `${request.body.destination.lat}, ${request.body.destination.lng}`,
             waypoints: request.body.middlePoints,
-            mode: 'driving'
-        }, (err, res) => {
+            travelMode: 'DRIVING'
+        }, (err, result) => {
             if (err) {
-                return response.status(400).send(err.json.status)
-            } else if (res.json.status === 'OK') {
-                return response.status(200).send(res)
+                return response.status(400).send(err)
+            } else if (result.status === 'OK') {
+                return response.status(200).send(result)
             }
-            return response.status(400).send()
+            return response.status(404).send()
         })
-
 
     } catch (error) {
         console.log(error)
@@ -40,17 +40,37 @@ googleServicesRouter.post("/geocode", async (request, response) => {
             return response.status(400).json({ error: "Content missing" });
         }
 
-        return googleMapsClient.geocode({
+        googleApi.geocode({
             address: request.body.address
-        }, (err, res) => {
+        }, (err, result) => {
             if (err) {
-                return response.status(400).send(err.json.status)
-            } else if (res.json.status === 'OK') {
-                return response.status(200).send(res.json)
+                return response.status(400).send(err)
+            } else if (result.status === 'OK') {
+                return response.status(200).send(result)
             }
-            return response.status(400).send()
         })
 
+    } catch (error) {
+        console.log(error)
+        response.status(400).send({ error: "Something went wrong, try again later" })
+    }
+})
+
+googleServicesRouter.post("/geocode/reverse", async (request, response) => {
+    try {
+        if (request.body === undefined || (request.body.constructor === Object && Object.keys(request.body).length === 0)) {
+            return response.status(400).json({ error: "Content missing" });
+        }
+
+        googleApi.reverseGeocode({
+            latlng: `${request.body.lat}, ${request.body.lng}`
+        }, (err, result) => {
+            if (err) {
+                return response.status(400).send(err)
+            } else if (result.status === 'OK') {
+                return response.status(200).send(result)
+            }
+        })
     } catch (error) {
         console.log(error)
         response.status(400).send({ error: "Something went wrong, try again later" })

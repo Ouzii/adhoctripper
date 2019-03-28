@@ -102,8 +102,12 @@ class App extends Component {
       }
 
       this.loadPosition().then(async (position) => {
-        const weather = await weatherService.getWeather(position)
-        this.props.setWeather(weather)
+        try {
+          const weather = await weatherService.getWeather(position)
+          this.props.setWeather(weather)
+        } catch (error) {
+          this.props.setWeather({description: 'Not available', temperature: 'Not available', wind: 'Not available'})
+        }
       })
     }
 

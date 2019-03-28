@@ -6,6 +6,7 @@ import tripService from '../services/trip'
 import { notify } from '../reducers/notificationReducer'
 import TripInfo from './TripInfo'
 import { setPersonalTrips } from '../reducers/personalTripsReducer'
+import mapService from '../services/map'
 
 class NewTripPage extends Component {
     constructor(props) {
@@ -45,13 +46,18 @@ class NewTripPage extends Component {
         })
     }
 
-    getAddress(start) {
-        return new Promise((resolve, reject) => this.geocoder.geocode({ location: start }, (results, status) => {
-            if (status === 'OK') {
-                resolve(results[0].formatted_address)
-            }
-        })
-        )
+    async getAddress(location) {
+        const address = await mapService.reverseGeocode(location)
+        if (address.status === 'OK') {
+            console.log(address)
+            return address.results[0].formatted_address
+        }
+        // return new Promise((resolve, reject) => this.geocoder.geocode({ location: location }, (results, status) => {
+        //     if (status === 'OK') {
+        //         resolve(results[0].formatted_address)
+        //     }
+        // })
+        // )
     }
 
     saveTrip = async () => {
