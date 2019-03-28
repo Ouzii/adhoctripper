@@ -106,7 +106,7 @@ tripRouter.delete("/:id", async (request, response) => {
         if (!tripToBeDeleted) {
             return response.status(404).send({ error: "Trip not found" })
         }
-        console.log(request)
+        
         const decoded = jwt.verify(request.body.token, secret)
         if (decoded.id.toString() === tripToBeDeleted.user.toString()) {
             await Trip.findOneAndDelete(Trip.findById(request.params.id))
