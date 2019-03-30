@@ -32,6 +32,7 @@ Ad-Hoc Tripper (AHT) on helppokäyttöinen PWA, missä käyttäjä voi luoda rei
 
 ### [Sovelluksen käynnistäminen Herokussa](https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction)
 
+Testattu Chrome 72.0.3626.121 ja Android 7.0
 ___
 
 Ad-Hoc Tripper (AHT) is easy to use PWA, where user can create plans for roadtrips. Application uses Google Map API, Google Directions API and Google Geocoding API. Application can be user without registering, but in order to save trips one has to create an account and log in. Application offers easy ways to plan point-to-point trips as well as trips with detours. User can share their trips for others to see. Application also calculates estimations for fuel consumption and price, based on the information user has given. Trips generate a link to Google Maps, which can be used to easily access Google Maps Navigation on mobile devices. Application also uses OpenWeatherMap API to show simple weather information.
@@ -63,3 +64,5 @@ Ad-Hoc Tripper (AHT) is easy to use PWA, where user can create plans for roadtri
 5. `npm start`
 
 ### [Deploying to Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction)
+
+Tested on Chrome 72.0.3626.121 and Android 7.0
