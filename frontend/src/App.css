@@ -323,10 +323,12 @@ input {
     margin-top: 10px;
     background-color: #9a9a9a;
     padding: 10px;
-    overflow: scroll;
+    overflow-y: scroll;
     height: 174px;
     margin: auto;
     max-width: 400px;
+    font-size: smaller;
+    text-align: center;
 }
 
 button {
