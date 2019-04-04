@@ -183,7 +183,7 @@ const mapStateToProps = (state) => ({
             if (state.loggedUser) {
                 return trip.user !== state.loggedUser.id
             } else {
-                return false
+                return true
             }
         }))
         :

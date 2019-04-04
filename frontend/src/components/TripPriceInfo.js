@@ -3,7 +3,7 @@ import Select from 'react-select'
 
 const colourStyles = {
     control: styles => ({ ...styles, backgroundColor: 'black', width: '50%', maxWidth: '400px', margin: 'auto' }),
-    option: (styles, {  isDisabled, isFocused, isSelected }) => {
+    option: (styles, { isDisabled, isFocused, isSelected }) => {
         return {
             ...styles,
             backgroundColor: isDisabled
@@ -24,21 +24,23 @@ export default class TripPriceInfo extends Component {
 
         this.state = {
             currentVehicle: 0,
-            vehicles: props.user.vehicles,
+            vehicles: props.user ? props.user.vehicles : [],
             length: props.length,
-            estFuelPrice: props.user.estFuelPrice,
+            estFuelPrice: props.user ? props.user.estFuelPrice : 0,
             options: []
         }
     }
 
     componentDidMount() {
-        const options = this.state.vehicles.map(vehicle => {
-            return {
-                value: this.state.vehicles.indexOf(vehicle),
-                label: vehicle.name
-            }
-        })
-        this.setState({ options })
+        if (this.state.user) {
+            const options = this.state.vehicles.map(vehicle => {
+                return {
+                    value: this.state.vehicles.indexOf(vehicle),
+                    label: vehicle.name
+                }
+            })
+            this.setState({ options })
+        }
     }
 
     handleChange = (selectedOption) => {
@@ -60,9 +62,9 @@ export default class TripPriceInfo extends Component {
 
                         Length of route: {+(this.state.length / 1000).toFixed(2)}km<br />
                         {this.state.vehicles.length > 0 ?
-                        <div>
-                        Est. fuel consumption: {+((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)).toFixed(2)} l<br/>
-                        Est. fuel price: {+(((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)) * this.state.estFuelPrice).toFixed(2)}€
+                            <div>
+                                Est. fuel consumption: {+((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)).toFixed(2)} l<br />
+                                Est. fuel price: {+(((this.state.length / 1000) * (this.state.vehicles[this.state.currentVehicle].consumption / 100)) * this.state.estFuelPrice).toFixed(2)}€
                             </div>
                             :
                             <div>
