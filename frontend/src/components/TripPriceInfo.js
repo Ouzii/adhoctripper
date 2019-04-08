@@ -43,6 +43,19 @@ export default class TripPriceInfo extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.user !== this.state.user && nextProps.user.vehicles) {
+            const options = nextProps.user.vehicles.map(vehicle => {
+                return {
+                    value: nextProps.user.vehicles.indexOf(vehicle),
+                    label: vehicle.name
+                }
+            })
+
+            this.setState({ options, vehicles: nextProps.user.vehicles })
+        }
+    }
+
     handleChange = (selectedOption) => {
         this.setState({ currentVehicle: parseInt(selectedOption.value) })
     }
