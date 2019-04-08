@@ -28,7 +28,12 @@
     "mongoose": "^5.4.8"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10",
-    "dotenv": "^7.0.0"
+    "dotenv": "^7.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "nodemon": "^1.18.10"
   }
 }
